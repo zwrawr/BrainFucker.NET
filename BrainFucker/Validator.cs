@@ -5,12 +5,6 @@
 
 namespace BrainFucker
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-
     /// <summary>
     /// This class provides methods for validating brain fuck programs
     /// </summary>
@@ -64,6 +58,7 @@ namespace BrainFucker
                     loopDepth--;
                 }
 
+                // if loop depth is ever negative then there were too many closing brackets.
                 if (loopDepth < 0)
                 {
                     break;
@@ -83,16 +78,10 @@ namespace BrainFucker
             bool isValid = true;
             foreach (char c in commands)
             {
-                if ((c != Commands.NEXT) &&
-                    (c != Commands.PREV) &&
-                    (c != Commands.INC) &&
-                    (c != Commands.DEC) &&
-                    (c != Commands.IN) &&
-                    (c != Commands.OUT) &&
-                    (c != Commands.BL) &&
-                    (c != Commands.BR))
+                isValid = Commands.isCommand(c);
+
+                if (!isValid)
                 {
-                    isValid = false;
                     break;
                 }
             }
