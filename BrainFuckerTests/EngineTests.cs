@@ -1,4 +1,4 @@
-﻿// <copyright file="BFEngineTests.cs" company="Zak West">
+﻿// <copyright file="EngineTests.cs" company="Zak West">
 //     This code is licensed under GNU LGPL v3.0.
 // </copyright>
 // <author>Zak West, @zwrawr, zwrawr@gmail.com</author>
@@ -10,7 +10,7 @@ namespace BrainFucker.Tests
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     /// <summary>
-    /// This class is responsible for unit testing <see cref="BFEngine"/>.
+    /// This class is responsible for unit testing <see cref="Engine"/>.
     /// </summary>
     [TestClass]
     public class BFEngineTests
@@ -59,7 +59,7 @@ namespace BrainFucker.Tests
 
             StringBuilder output = new StringBuilder();
 
-            BFEngine bfe = new BFEngine(new StringReader(this.inputs[testNum]), new StringWriter(output));
+            Engine bfe = new Engine(new StringReader(this.inputs[testNum]), new StringWriter(output));
             bfe.Run(this.programs[testNum]);
 
             string gotOutput = output.ToString();
@@ -87,7 +87,7 @@ namespace BrainFucker.Tests
 
             StringBuilder output = new StringBuilder();
 
-            BFEngine bfe = new BFEngine(new StringReader(this.inputs[testNum]), new StringWriter(output));
+            Engine bfe = new Engine(new StringReader(this.inputs[testNum]), new StringWriter(output));
             bfe.Run(this.programs[testNum]);
 
             string gotOutput = output.ToString();
@@ -115,7 +115,7 @@ namespace BrainFucker.Tests
 
             StringBuilder output = new StringBuilder();
 
-            BFEngine bfe = new BFEngine(new StringReader(this.inputs[testNum]), new StringWriter(output));
+            Engine bfe = new Engine(new StringReader(this.inputs[testNum]), new StringWriter(output));
             bfe.Run(this.programs[testNum]);
 
             string gotOutput = output.ToString();
@@ -142,7 +142,7 @@ namespace BrainFucker.Tests
             int testNum = 3;
             StringBuilder output = new StringBuilder();
 
-            BFEngine bfe = new BFEngine(new StringReader(this.inputs[testNum]), new StringWriter(output));
+            Engine bfe = new Engine(new StringReader(this.inputs[testNum]), new StringWriter(output));
             bfe.Run(this.programs[testNum]);
 
             string gotOutput = output.ToString();

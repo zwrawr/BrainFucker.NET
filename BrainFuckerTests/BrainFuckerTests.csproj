@@ -51,8 +51,8 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="BFEngineTests.cs" />
-    <Compile Include="BFValidatorTests.cs" />
+    <Compile Include="EngineTests.cs" />
+    <Compile Include="ValidatorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

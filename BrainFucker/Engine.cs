@@ -1,4 +1,4 @@
-﻿// <copyright file="BFEngine.cs" company="Zak West">
+﻿// <copyright file="Engine.cs" company="Zak West">
 //     This code is licensed under GNU LGPL v3.0.
 // </copyright>
 // <author>Zak West, @zwrawr, zwrawr@gmail.com</author>
@@ -11,7 +11,7 @@ namespace BrainFucker
     /// <summary>
     /// A brain fuck engine, for interpreting brain fuck code.
     /// </summary>
-    public class BFEngine
+    public class Engine
     {
         /// <summary>
         /// The amount of memory that this brain fuck engine has.
@@ -53,11 +53,11 @@ namespace BrainFucker
         private StringWriter outputWriter;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BFEngine"/> class. 
+        /// Initializes a new instance of the <see cref="Engine"/> class. 
         /// </summary>
         /// <param name="inputTextReader">The input reader to use.</param>
         /// <param name="outputTextWriter">The output writer to use.</param>
-        public BFEngine(TextReader inputTextReader, TextWriter outputTextWriter)
+        public Engine(TextReader inputTextReader, TextWriter outputTextWriter)
         {
             this.inputReader = (StringReader)inputTextReader;
             this.outputWriter = (StringWriter)outputTextWriter;
@@ -75,7 +75,7 @@ namespace BrainFucker
         {
             this.program = program;
 
-            if (BFValidator.Validate(program))
+            if (Validator.Validate(program))
             {
                 this.Interpret(program.ToCharArray());
             }
