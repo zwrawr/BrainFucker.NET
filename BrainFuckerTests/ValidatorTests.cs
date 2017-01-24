@@ -5,12 +5,11 @@
 
 namespace BrainFucker.Tests
 {
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     /// <summary>
     /// Responsible for testing the <see cref="Validator"/> class.
     /// </summary>
-    [TestClass]
     public class ValidatorTests
     {
         /// <summary>
@@ -69,7 +68,7 @@ namespace BrainFucker.Tests
         /// <summary>
         /// Tests to make sure that the Validate method works correctly.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ValidateTest()
         {
             bool isValid = true;
@@ -84,7 +83,7 @@ namespace BrainFucker.Tests
         /// <summary>
         /// Tests to make sure that the CheckForUnclosedBrackets method works correctly.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void CheckForUnclosedBracketsTest()
         {
             bool isValid = true;
@@ -99,7 +98,7 @@ namespace BrainFucker.Tests
         /// <summary>
         /// Tests to make sure that the CheckForInvalidCommands method works correctly.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void CheckForInvalidCommandsTest()
         {
             bool isValid = true;

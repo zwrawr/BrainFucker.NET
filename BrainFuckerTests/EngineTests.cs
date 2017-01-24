@@ -7,12 +7,11 @@ namespace BrainFucker.Tests
 {
     using System.IO;
     using System.Text;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     /// <summary>
     /// This class is responsible for unit testing <see cref="Engine"/>.
     /// </summary>
-    [TestClass]
     public class BFEngineTests
     {
         /// <summary>
@@ -51,7 +50,7 @@ namespace BrainFucker.Tests
         /// <summary>
         /// Test checks the operation of the brain fuck output command "." .
         /// </summary>
-        [TestMethod]
+        [Test]
         [Timeout(100)]
         public void Test_Output()
         {
@@ -79,7 +78,7 @@ namespace BrainFucker.Tests
         /// <summary>
         /// Test checks the operation of the brain fuck input command "," .
         /// </summary>
-        [TestMethod]
+        [Test]
         [Timeout(100)]
         public void Test_Input()
         {
@@ -107,7 +106,7 @@ namespace BrainFucker.Tests
         /// <summary>
         /// Test checks the operation of the brain fuck looping commands "[" and "]" without any nesting .
         /// </summary>
-        [TestMethod]
+        [Test]
         [Timeout(100)]
         public void Test_BasicLoop()
         {
@@ -135,7 +134,7 @@ namespace BrainFucker.Tests
         /// <summary>
         /// Test checks the operation of the brain fuck looping commands "[" and "]" with nesting .
         /// </summary>
-        [TestMethod]
+        [Test]
         [Timeout(1000)]
         public void Test_NestedLoops()
         {
@@ -159,7 +158,7 @@ namespace BrainFucker.Tests
                     gotOutput));
         }
 
-        /*[TestMethod]
+        /*[Test]
         [Timeout(1000)]
         public void Test_ReRun()
         {
