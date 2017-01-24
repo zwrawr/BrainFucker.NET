@@ -50,113 +50,33 @@ namespace BrainFucker.Tests
         /// <summary>
         /// Test checks the operation of the brain fuck output command "." .
         /// </summary>
-        [Test]
+        [TestCase("+++++++++.", "", "\t")]
+        [TestCase(",.", "1", "1")]
+        [TestCase("++>+++++[<+>-]++++++++[<++++++>-]<.", "", "7")]
+        [TestCase("++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.", "", "Hello World!\n")]
         [Timeout(100)]
-        public void Test_Output()
+        public void Test_Output(string programString, string inputString, string outputString)
         {
-            int testNum = 0;
 
             StringBuilder output = new StringBuilder();
 
-            Engine bfe = new Engine(new StringReader(this.inputs[testNum]), new StringWriter(output));
-            bfe.Run(this.programs[testNum]);
+            Engine bfe = new Engine(new StringReader(inputString), new StringWriter(output));
+            bfe.Run(programString);
 
             string gotOutput = output.ToString();
 
-            bool info = this.expectedOutputs[testNum] == gotOutput;
+            bool info = outputString == gotOutput;
 
             Assert.IsTrue(
                 info,
                 string.Format(
                     "Program ( {0} ), with inputs ( {1} ), expected results of ( {2} ), got results of ( {3} )",
-                    this.programs[testNum],
-                    this.inputs[testNum],
-                    this.expectedOutputs[testNum],
+                    programString,
+                    inputString,
+                    outputString,
                     gotOutput));
         }
 
-        /// <summary>
-        /// Test checks the operation of the brain fuck input command "," .
-        /// </summary>
-        [Test]
-        [Timeout(100)]
-        public void Test_Input()
-        {
-            int testNum = 1;
-
-            StringBuilder output = new StringBuilder();
-
-            Engine bfe = new Engine(new StringReader(this.inputs[testNum]), new StringWriter(output));
-            bfe.Run(this.programs[testNum]);
-
-            string gotOutput = output.ToString();
-
-            bool info = this.expectedOutputs[testNum] == gotOutput;
-
-            Assert.IsTrue(
-                info,
-                string.Format(
-                    "Program ( {0} ), with inputs ( {1} ), expected results of ( {2} ), got results of ( {3} )",
-                    this.programs[testNum],
-                    this.inputs[testNum],
-                    this.expectedOutputs[testNum],
-                    gotOutput));
-        }
-
-        /// <summary>
-        /// Test checks the operation of the brain fuck looping commands "[" and "]" without any nesting .
-        /// </summary>
-        [Test]
-        [Timeout(100)]
-        public void Test_BasicLoop()
-        {
-            int testNum = 2;
-
-            StringBuilder output = new StringBuilder();
-
-            Engine bfe = new Engine(new StringReader(this.inputs[testNum]), new StringWriter(output));
-            bfe.Run(this.programs[testNum]);
-
-            string gotOutput = output.ToString();
-
-            bool info = this.expectedOutputs[testNum] == gotOutput;
-
-            Assert.IsTrue(
-                info,
-                string.Format(
-                    "Program ( {0} ), with inputs ( {1} ), expected results of ( {2} ), got results of ( {3} )",
-                    this.programs[testNum],
-                    this.inputs[testNum],
-                    this.expectedOutputs[testNum],
-                    gotOutput));
-        }
-
-        /// <summary>
-        /// Test checks the operation of the brain fuck looping commands "[" and "]" with nesting .
-        /// </summary>
-        [Test]
-        [Timeout(1000)]
-        public void Test_NestedLoops()
-        {
-            int testNum = 3;
-            StringBuilder output = new StringBuilder();
-
-            Engine bfe = new Engine(new StringReader(this.inputs[testNum]), new StringWriter(output));
-            bfe.Run(this.programs[testNum]);
-
-            string gotOutput = output.ToString();
-
-            bool info = this.expectedOutputs[testNum] == gotOutput;
-
-            Assert.IsTrue(
-                info,
-                string.Format(
-                    "Inputs \"{1}\", expected results of \"{2}\", got results of \"{3}\"",
-                    this.programs[testNum],
-                    this.inputs[testNum],
-                    this.expectedOutputs[testNum],
-                    gotOutput));
-        }
 
         /*[Test]
         [Timeout(1000)]
