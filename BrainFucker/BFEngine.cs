@@ -75,7 +75,10 @@ namespace BrainFucker
         {
             this.program = program;
 
-            this.Interpret(program.ToCharArray());
+            if (BFValidator.Validate(program))
+            {
+                this.Interpret(program.ToCharArray());
+            }
         }
 
         /// <summary>
