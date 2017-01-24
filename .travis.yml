@@ -3,7 +3,6 @@ solution: BrainFucker.sln
 
 install:
   - nuget restore BrainFucker.sln
-  - nuget install NUnit.Runners -Version 3.2.0 -OutputDirectory testrunner
 script:
   - xbuild /p:Configuration=Release BrainFucker.sln
   - mono ./testrunner/NUnit.Runners.3.2.0/tools/nunit-console.exe ./BrainFuckerTests/bin/Release/BrainFuckerTests.dll
