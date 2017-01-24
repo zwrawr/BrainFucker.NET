@@ -5,4 +5,4 @@ install:
   - nuget restore BrainFucker.sln
 script:
   - xbuild /p:Configuration=Release BrainFucker.sln
-  - mono ./testrunner/NUnit.Runners.3.2.0/tools/nunit-console.exe ./BrainFuckerTests/bin/Release/BrainFuckerTests.dll
+  - mono ./testrunner/NUnit.Runners.3.6.0/tools/nunit-console.exe ./BrainFuckerTests/bin/Release/BrainFuckerTests.dll
