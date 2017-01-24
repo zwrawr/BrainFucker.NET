@@ -1,4 +1,4 @@
-﻿// <copyright file="BFValidator.cs" company="Zak West">
+﻿// <copyright file="Validator.cs" company="Zak West">
 //     This code is licensed under GNU LGPL v3.0.
 // </copyright>
 // <author>Zak West, @zwrawr, zwrawr@gmail.com</author>;
@@ -11,9 +11,16 @@ namespace BrainFucker
     using System.Text;
     using System.Threading.Tasks;
 
-    public static class BFValidator
+    /// <summary>
+    /// This class provides methods for validating brain fuck programs
+    /// </summary>
+    public static class Validator
     {
-
+        /// <summary>
+        /// Validates a brain fuck program.
+        /// </summary>
+        /// <param name="program">The program to validate</param>
+        /// <returns>Returns true if program is valid, if not false</returns>
         public static bool Validate(string program)
         {
             char[] commands = program.ToCharArray();
@@ -38,6 +45,11 @@ namespace BrainFucker
             return true;
         }
 
+        /// <summary>
+        /// Checks to see if the program has any incomplete brackets.
+        /// </summary>
+        /// <param name="commands">The brain fuck program to validate.</param>
+        /// <returns>Returns true if program is valid, if not false</returns>
         public static bool CheckForUnclosedBrackets(char[] commands)
         {
             int loopDepth = 0;
@@ -58,9 +70,14 @@ namespace BrainFucker
                 }
             }
 
-            return (loopDepth == 0);
+            return loopDepth == 0;
         }
 
+        /// <summary>
+        /// Checks to see if the program has any non command chars.
+        /// </summary>
+        /// <param name="commands">The brain fuck program to validate.</param>
+        /// <returns>Returns true if program is valid, if not false</returns>
         public static bool CheckForInvalidCommands(char[] commands)
         {
             bool isValid = true;
