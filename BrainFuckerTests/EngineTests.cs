@@ -14,38 +14,6 @@ namespace BrainFucker.Tests
     /// </summary>
     public class BFEngineTests
     {
-        /// <summary>
-        /// Test brain fuck programs.
-        /// </summary>
-        private string[] programs = 
-            {
-            "+++++.",
-            ",.",
-            "++>+++++[<+>-]++++++++[<++++++>-]<.",
-            "++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++."
-        };
-
-        /// <summary>
-        /// Test inputs
-        /// </summary>
-        private string[] inputs = 
-            {
-            string.Empty,
-            "1",
-            string.Empty,
-            string.Empty
-        };
-
-        /// <summary>
-        /// The expected output of 
-        /// </summary>
-        private string[] expectedOutputs = 
-            {
-            new string((char)5, 1),
-            "1",
-            "7",
-            "Hello World!\n"
-        };
 
         /// <summary>
         /// Test checks the operation of the brain fuck output command "." .
