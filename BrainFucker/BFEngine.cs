@@ -75,7 +75,10 @@ namespace BrainFucker
         {
             this.program = program;
 
-            this.Interpret(program.ToCharArray());
+            if (BFValidator.Validate(program))
+            {
+                this.Interpret(program.ToCharArray());
+            }
         }
 
         /// <summary>
@@ -100,50 +103,50 @@ namespace BrainFucker
             {
                 switch (program[this.programPointer])
                 {
-                    case COMMANDS.NEXT:
+                    case Commands.NEXT:
 
                         this.dataPointer = (this.dataPointer == this.dataSize - 1) ? 0 : this.dataPointer + 1;
                         break;
 
-                    case COMMANDS.PREV:
+                    case Commands.PREV:
 
                         this.dataPointer = (this.dataPointer == 0) ? this.dataSize - 1 : this.dataPointer - 1;
                         break;
 
-                    case COMMANDS.INC:
+                    case Commands.INC:
 
                         this.data[this.dataPointer]++;
                         break;
 
-                    case COMMANDS.DEC:
+                    case Commands.DEC:
 
                         this.data[this.dataPointer]--;
                         break;
 
-                    case COMMANDS.OUT:
+                    case Commands.OUT:
 
                         this.outputWriter.Write((char)this.data[this.dataPointer]);
                         break;
 
-                    case COMMANDS.IN:
+                    case Commands.IN:
 
                         this.data[this.dataPointer] = (byte)this.inputReader.Read();
                         break;
 
-                    case COMMANDS.BL:
+                    case Commands.BL:
 
                         if (this.data[this.dataPointer] == 0)
                         {
                             this.programPointer++;
 
-                            while (loopDepth > 0 || program[this.programPointer] != COMMANDS.BR)
+                            while (loopDepth > 0 || program[this.programPointer] != Commands.BR)
                             {
-                                if (this.program[this.programPointer] == COMMANDS.BL)
+                                if (this.program[this.programPointer] == Commands.BL)
                                 {
                                     loopDepth++;
                                 }
 
-                                if (this.program[this.programPointer] == COMMANDS.BR)
+                                if (this.program[this.programPointer] == Commands.BR)
                                 {
                                     loopDepth--;
                                 }
@@ -154,20 +157,20 @@ namespace BrainFucker
 
                         break;
 
-                    case COMMANDS.BR:
+                    case Commands.BR:
 
                         if (this.data[this.dataPointer] != 0)
                         {
                             this.programPointer--;
 
-                            while (loopDepth > 0 || program[this.programPointer] != COMMANDS.BL)
+                            while (loopDepth > 0 || program[this.programPointer] != Commands.BL)
                             {
-                                if (this.program[this.programPointer] == COMMANDS.BR)
+                                if (this.program[this.programPointer] == Commands.BR)
                                 {
                                     loopDepth++;
                                 }
 
-                                if (this.program[this.programPointer] == COMMANDS.BL)
+                                if (this.program[this.programPointer] == Commands.BL)
                                 {
                                     loopDepth--;
                                 }
@@ -202,21 +205,6 @@ namespace BrainFucker
             // zero pointers
             this.dataPointer = 0;
             this.programPointer = 0;
-        }
-
-        /// <summary>
-        /// Used to look up brain fuck commands by there name.
-        /// </summary>
-        private struct COMMANDS
-        {
-            public const char NEXT = '>';
-            public const char PREV = '<';
-            public const char INC = '+';
-            public const char DEC = '-';
-            public const char OUT = '.';
-            public const char IN = ',';
-            public const char BL = '[';
-            public const char BR = ']';
         }
     }
 }
