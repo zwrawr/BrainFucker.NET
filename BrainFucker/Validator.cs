@@ -5,12 +5,6 @@
 
 namespace BrainFucker
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-
     /// <summary>
     /// This class provides methods for validating brain fuck programs
     /// </summary>

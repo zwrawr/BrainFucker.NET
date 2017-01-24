@@ -5,11 +5,7 @@
 
 namespace BrainFucker
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// Used to look up brain fuck commands by there name.
