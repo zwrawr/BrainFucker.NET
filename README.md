@@ -1,6 +1,6 @@
 [//]: # (This is the source file for the BrainFucker.NET readme)
 
-# BrainFucker.NET
+# BrainFucker.NET ![](https://travis-ci.com/zwrawr/BrainFucker.NET.svg?token=R9Ug2Y51bs1kYYNxusrQ&branch=master)
 A .NET BrainFuck Interpreter.
 
 [//]: # (#Installation)
