@@ -1,13 +1,12 @@
-﻿using NUnit.Framework;
-using BrainFucker;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// <copyright file="CommandsTests.cs" company="Zak West">
+//     This code is licensed under GNU LGPL v3.0.
+// </copyright>
+// <author>Zak West, @zwrawr, zwrawr@gmail.com</author>
 
 namespace BrainFucker.Tests
 {
+    using NUnit.Framework;
+
     [TestFixture]
     public class CommandsTests
     {
