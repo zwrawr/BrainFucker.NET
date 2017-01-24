@@ -10,6 +10,7 @@ namespace BrainFucker.Tests
     /// <summary>
     /// Responsible for testing the <see cref="Validator"/> class.
     /// </summary>
+    [TestFixture]
     public class ValidatorTests
     {
         /// <summary>
