@@ -100,5 +100,37 @@ namespace BrainFucker.Tests
 
             Assert.IsTrue(info, string.Format("expected {0} =/= input {1}", expected_1, output));
         }
-    }
+
+
+        // These tests are timing dependent so don't run them on travisCI.
+
+        /*
+        /// <summary>
+        /// Test checks the operation of the brain fuck Engine using StringReaders and StringWriters .
+        /// </summary>
+        /// <param name="program">the programs to be ran.</param>
+        /// <param name="input">The inputs to the program.</param>
+        /// <param name="expected">The expected output of the system.</param>
+        [TestCase("+++++++++.", 1, true)] 
+        [TestCase(".+[.+]", 0, true)] // Prints ASCII with not timeout
+        [TestCase("++++[>+++++<-]>[<+++++>-]+<+[>[>+>+<<-]++>>[<<+>>-]>>>[-]++>[-]+>>>+[[-]++++++>>>]<<<[[<++++++++<++>>-]+<.<[>----<-]<]<<[>>>>>[>>>[-]+++++++++<[>-<-]+++++++++>[-[<->-]+[<<<]]<[>+<-]>]<<-]<<-]", 10, false)] // test function takes along time
+        [TestCase(".+[.+].+[.+].+[.+].+[.+].+[.+].+[.+].+[.+].+[.+].+[.+].+[.+].+[.+].+[.+]", 2, false)] // prints ASCII multiple times. Should time out.
+        [TestCase(".+[.+].", 2, true)] // prints ASCII
+        [TestCase("+[]", 100, false)] // infinite loop
+        [Timeout(1000)]
+        public void Test_Engine_TimeOut(string program, int timeOut, bool shouldFinish)
+        {
+            Engine bfe = new Engine();
+
+            string output = bfe.Run(program, string.Empty,timeOut);
+
+            bool didFinish = output!=null;
+
+            string message = didFinish ? "program finished":"program didn't finish";
+
+            Assert.IsTrue(didFinish == shouldFinish , message);
+
+        }
+        */
+    } 
 }

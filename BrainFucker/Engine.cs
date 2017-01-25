@@ -82,7 +82,7 @@ namespace BrainFucker
                 bool completed = thread.Join(timeLimit);
                 if (!completed)
                 {
-                    return string.Empty;
+                    return null;
                 }
 
                 return output;
@@ -93,7 +93,7 @@ namespace BrainFucker
             }
             else
             {
-                return string.Empty;
+                return null;
             }
         }
 
@@ -112,7 +112,7 @@ namespace BrainFucker
             }
             else
             {
-                return string.Empty;
+                return null;
             }
         }
 
