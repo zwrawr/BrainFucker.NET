@@ -7,6 +7,7 @@ namespace BrainFucker
 {
     using System;
     using System.IO;
+    using System.Text;
 
     /// <summary>
     /// A brain fuck engine, for interpreting brain fuck code.
@@ -36,32 +37,21 @@ namespace BrainFucker
         private int programPointer = 0;
 
         /// <summary>
+        /// The input pointer for this brain fuck engine.
+        /// This points to the current input to the program.        
+        /// </summary>
+        private int inputPointer = 0;
+
+        /// <summary>
         /// The brain fuck program that is being ran.
         /// </summary>
         private string program;
 
         /// <summary>
-        /// The input reader for this brain fuck engine. 
-        /// Inputs to the brain fuck program are obtained from this reader.
-        /// </summary>
-        private StringReader inputReader;
-
-        /// <summary>
-        /// The output writer for this brain fuck engine. 
-        /// Outputs from the brain fuck program are sent over this writer.
-        /// </summary>
-        private StringWriter outputWriter;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="Engine"/> class. 
         /// </summary>
-        /// <param name="inputTextReader">The input reader to use.</param>
-        /// <param name="outputTextWriter">The output writer to use.</param>
-        public Engine(TextReader inputTextReader, TextWriter outputTextWriter)
+        public Engine()
         {
-            this.inputReader = (StringReader)inputTextReader;
-            this.outputWriter = (StringWriter)outputTextWriter;
-
             this.data = new byte[this.dataSize];
 
             this.Init();
@@ -71,37 +61,46 @@ namespace BrainFucker
         /// Runs a brain fuck program
         /// </summary>
         /// <param name="program">The program to be run</param>
-        public void Run(string program)
+        public string Run(string program, string input)
         {
             this.program = program;
 
             if (Validator.Validate(program))
             {
-                this.Interpret(program.ToCharArray());
+                return this.Interpret(program.ToCharArray(), input.ToCharArray());
+            }
+            else
+            {
+                return string.Empty;
             }
         }
 
         /// <summary>
         /// Re runs the last program
         /// </summary>
-        public void Rerun()
+        public string Rerun(string input)
         {
             if (this.program != null)
             {
-                this.Interpret(this.program.ToCharArray());
+                return this.Interpret(this.program.ToCharArray(),input.ToCharArray());
+            }
+            else
+            {
+                return string.Empty;
             }
         }
 
         /// <summary>
         /// Interpreter for brain fuck. This function is what actually runs brain fuck. 
         /// </summary>
-        /// <param name="program"> The program to be ran. </param>
-        private void Interpret(char[] program)
+        /// <param name="commands"> The program to be ran. </param>
+        private string Interpret(char[] commands, char[] inputs)
         {
+            StringBuilder builder = new StringBuilder();
             int loopDepth = 0;
             for (this.programPointer = 0; this.programPointer < this.program.Length; this.programPointer++)
             {
-                switch (program[this.programPointer])
+                switch (commands[this.programPointer])
                 {
                     case Commands.NEXT:
 
@@ -125,12 +124,13 @@ namespace BrainFucker
 
                     case Commands.OUT:
 
-                        this.outputWriter.Write((char)this.data[this.dataPointer]);
+                        builder.Append((char)this.data[this.dataPointer]);
                         break;
 
                     case Commands.IN:
 
-                        this.data[this.dataPointer] = (byte)this.inputReader.Read();
+                        this.data[this.dataPointer] = (byte)inputs[inputPointer];
+                        this.inputPointer++;
                         break;
 
                     case Commands.BL:
@@ -139,7 +139,7 @@ namespace BrainFucker
                         {
                             this.programPointer++;
 
-                            while (loopDepth > 0 || program[this.programPointer] != Commands.BR)
+                            while (loopDepth > 0 || commands[this.programPointer] != Commands.BR)
                             {
                                 if (this.program[this.programPointer] == Commands.BL)
                                 {
@@ -163,7 +163,7 @@ namespace BrainFucker
                         {
                             this.programPointer--;
 
-                            while (loopDepth > 0 || program[this.programPointer] != Commands.BL)
+                            while (loopDepth > 0 || commands[this.programPointer] != Commands.BL)
                             {
                                 if (this.program[this.programPointer] == Commands.BR)
                                 {
@@ -189,6 +189,7 @@ namespace BrainFucker
             }
 
             this.Init();
+            return builder.ToString();
         }
 
         /// <summary>
@@ -205,6 +206,8 @@ namespace BrainFucker
             // zero pointers
             this.dataPointer = 0;
             this.programPointer = 0;
+            this.inputPointer = 0;
+
         }
     }
 }
