@@ -13,10 +13,11 @@ namespace BrainFucker.Tests
     [TestFixture]
     public class ValidatorTests
     {
-
         /// <summary>
         /// Tests to make sure that the Validate method works correctly.
         /// </summary>
+        /// <param name="program">The program to test.</param>
+        /// <param name="isValid">Weather the input is a valid program.</param>
         [TestCase("++++", true)]
         [TestCase("+++[>+<]++", true)]
         [TestCase("++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.", true)]
@@ -34,6 +35,8 @@ namespace BrainFucker.Tests
         /// <summary>
         /// Tests to make sure that the CheckForUnclosedBrackets method works correctly.
         /// </summary>
+        /// <param name="program">The test program.</param>
+        /// <param name="isValid">Weather the program has valid brackets.</param>
         [TestCase("++++", true)]
         [TestCase("+++[>+<]++", true)]
         [TestCase("++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.", true)]
@@ -51,6 +54,8 @@ namespace BrainFucker.Tests
         /// <summary>
         /// Tests to make sure that the CheckForInvalidCommands method works correctly.
         /// </summary>
+        /// <param name="program">The test program.</param>
+        /// <param name="isValid">Weather the program contains no invalid commands.</param>
         [TestCase("++++", true)]
         [TestCase("+++[>+<]++", true)]
         [TestCase("++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.", true)]
