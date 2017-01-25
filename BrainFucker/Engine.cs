@@ -8,6 +8,7 @@ namespace BrainFucker
     using System;
     using System.IO;
     using System.Text;
+    using System.Threading;
 
     /// <summary>
     /// A brain fuck engine, for interpreting brain fuck code.
@@ -17,7 +18,7 @@ namespace BrainFucker
         /// <summary>
         /// The amount of memory that this brain fuck engine has.
         /// </summary>
-        private int dataSize = 30000;
+        private const int dataSize = 30000;
 
         /// <summary>
         /// The memory for this brain fuck engine.
@@ -52,7 +53,7 @@ namespace BrainFucker
         /// </summary>
         public Engine()
         {
-            this.data = new byte[this.dataSize];
+            this.data = new byte[Engine.dataSize];
 
             this.Init();
         }
@@ -62,12 +63,31 @@ namespace BrainFucker
         /// </summary>
         /// <param name="program">The program to be run</param>
         /// <param name="input"> The input to the program. </param>
+        /// <param name="timeLimit">The maximum time in milliseconds the program will be allowed to run for.
+        /// Set to Zero for no time limit. Defaults to 1000ms</param>
         /// <returns>The outputs from the program</returns>
-        public string Run(string program, string input)
+        public string Run(string program, string input, int timeLimit = 1000)
         {
             this.program = program;
 
-            if (Validator.Validate(program))
+            bool isValid = Validator.Validate(program);
+
+            if (isValid && timeLimit > 0)
+            {
+                string output = string.Empty;
+
+                Thread thread = new Thread(() => output = this.Interpret(program.ToCharArray(), input.ToCharArray()));
+                thread.Start();
+
+                bool completed = thread.Join(timeLimit);
+                if (!completed)
+                {
+                    return string.Empty;
+                }
+
+                return output;
+            }
+            else if (isValid && timeLimit == 0)
             {
                 return this.Interpret(program.ToCharArray(), input.ToCharArray());
             }
@@ -81,12 +101,14 @@ namespace BrainFucker
         /// Re runs the last program
         /// </summary>
         /// <param name="input"> The input to the program. </param>
+        /// <param name="timeLimit">The maximum time in milliseconds the program will be allowed to run for.
+        /// Set to Zero for no time limit. Defaults to 1000ms</param>
         /// <returns>The outputs from the program</returns>
-        public string Rerun(string input)
+        public string Rerun(string input, int timeLimit = 1000)
         {
             if (this.program != null)
             {
-                return this.Interpret(this.program.ToCharArray(), input.ToCharArray());
+                return this.Run(this.program,input,timeLimit);
             }
             else
             {
@@ -110,12 +132,12 @@ namespace BrainFucker
                 {
                     case Commands.NEXT:
 
-                        this.dataPointer = (this.dataPointer == this.dataSize - 1) ? 0 : this.dataPointer + 1;
+                        this.dataPointer = (this.dataPointer == Engine.dataSize - 1) ? 0 : this.dataPointer + 1;
                         break;
 
                     case Commands.PREV:
 
-                        this.dataPointer = (this.dataPointer == 0) ? this.dataSize - 1 : this.dataPointer - 1;
+                        this.dataPointer = (this.dataPointer == 0) ? Engine.dataSize - 1 : this.dataPointer - 1;
                         break;
 
                     case Commands.INC:
@@ -204,7 +226,7 @@ namespace BrainFucker
         private void Init()
         {
             // zero out memory
-            for (int i = 0; i < this.dataSize; i++)
+            for (int i = 0; i < Engine.dataSize; i++)
             {
                 this.data[i] = 0;
             }
