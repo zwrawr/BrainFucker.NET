@@ -16,101 +16,80 @@ namespace BrainFucker.Tests
     {
 
         /// <summary>
-        /// Test checks the operation of the brain fuck output command "." .
+        /// Test checks the operation of the brain fuck Engine using StringReaders and StringWriters .
         /// </summary>
         [TestCase("+++++++++.", "", "\t")]
         [TestCase(",.", "1", "1")]
         [TestCase("++>+++++[<+>-]++++++++[<++++++>-]<.", "", "7")]
         [TestCase("++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.", "", "Hello World!\n")]
         [Timeout(100)]
-        public void Test_Output(string programString, string inputString, string outputString)
+        public void Test_Engine_String_ReaderWriters(string program, string input, string expected)
         {
 
-            StringBuilder output = new StringBuilder();
+            Engine bfe = new Engine();
 
-            Engine bfe = new Engine(new StringReader(inputString), new StringWriter(output));
-            bfe.Run(programString);
+            string output = bfe.Run(program, input);
 
-            string gotOutput = output.ToString();
-
-            bool info = outputString == gotOutput;
+            bool info = string.Compare(expected, output) == 0;
 
             Assert.IsTrue(
                 info,
                 string.Format(
                     "Program ( {0} ), with inputs ( {1} ), expected results of ( {2} ), got results of ( {3} )",
-                    programString,
-                    inputString,
-                    outputString,
-                    gotOutput));
+                    program,
+                    input,
+                    expected,
+                    output));
         }
 
-
-        /*[Test]
-        [Timeout(1000)]
-        public void Test_ReRun()
+        /// <summary>
+        /// Test checks the operation of the brain fuck Engine using StringReaders and StringWriters .
+        /// </summary>
+        [TestCase("+++++++++.", "", "\t")]
+        [TestCase(",.", "1", "1")]
+        [TestCase("++>+++++[<+>-]++++++++[<++++++>-]<.", "", "7")]
+        [TestCase("++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.", "", "Hello World!\n")]
+        [Timeout(100)]
+        public void Test_Engine_Streams(string program, string input, string expected)
         {
 
-            int testNum = 1;
+            Engine bfe = new Engine();
 
-            StringBuilder output = new StringBuilder();
+            string output = bfe.Run(program,input);
 
-            MemoryStream mStream = new MemoryStream();
-            StreamWriter sWriter = new StreamWriter(mStream);
-            sWriter.WriteLine(inputs[testNum]);
+            bool info = string.Compare(expected, output) == 0;
 
+            Assert.IsTrue(
+                info,
+                string.Format(
+                    "Program ( {0} ), with inputs ( {1} ), expected results of ( {2} ), got results of ( {3} )",
+                    program,
+                    input,
+                    expected,
+                    output));
+        }
 
-            BFEngine bfe = new BFEngine(new StreamReader(mStream), new StringWriter(output));
-            bfe.run(programs[testNum]);
+        [TestCase(",.", "1", "1", "5", "5")]
+        [TestCase(",.", "6", "6", "9", "9")]
+        [TestCase(",>+++++++++[<----->-]<--->,>+++++++++[<----->-]<---<[->+<]>>+++++++++[<+++++>-]<+++.", "12", "3","34","7")]
+        [Timeout(1000)]
+        public void Test_ReRun(string program, string input_1, string expected_1, string input_2, string expected_2)
+        {
 
-            string gotOutput = output.ToString();
-            bool info = (expectedOutputs[testNum] == gotOutput);
+            Engine bfe = new Engine();
 
-            // clear output
-            output.Clear();
-            // =
+            string output = bfe.Run(program, input_1);
 
+            bool info = string.Compare(expected_1, output) == 0;
 
-            // re add the input
-            sWriter.WriteLine("1");
+            Assert.IsTrue(info, string.Format("expected {0} =/= input {1}", expected_1, output));
 
-            // Rerun with the same input
-            bfe.rerun();
-            gotOutput = output.ToString();
+            output = bfe.Rerun(input_2);
 
-            info = info && ("1" == gotOutput);
+            info = (string.Compare(expected_2, output) == 0);
 
-            // clear output
-            output.Clear();
-            //=
+            Assert.IsTrue(info, string.Format("expected {0} =/= input {1}", expected_1, output));
 
-
-            // add a different value
-            sWriter.WriteLine("7");
-
-            // Rerun with the same input
-            bfe.rerun();
-            gotOutput = output.ToString();
-
-            info = info && ("7" == gotOutput);
-
-            // clear output
-            output.Clear();
-
-            // add a different value
-            sWriter.WriteLine("9");
-
-            // Rerun with the same input
-            bfe.rerun();
-            gotOutput = output.ToString();
-
-            info = info && ("9" == gotOutput);
-
-            // clear output
-            output.Clear();
-            // =
-
-            Assert.IsTrue(info);
-        }*/
+        }
     }
 }
