@@ -7,11 +7,18 @@ namespace BrainFucker.Tests
 {
     using NUnit.Framework;
 
+    /// <summary>
+    /// This class tests <see cref="Commands"/>.
+    /// </summary>
     [TestFixture]
     public class CommandsTests
     {
-
-        [TestCase('a',false)]
+        /// <summary>
+        /// Test to check that <see cref="Commands.IsCommand(char)"/> is working as expected.
+        /// </summary>
+        /// <param name="c">The character to test.</param>
+        /// <param name="isCommand">Weather the character is a valid command.</param>
+        [TestCase('a', false)]
         [TestCase('z', false)]
         [TestCase('/', false)]
         [TestCase('!', false)]
@@ -28,11 +35,16 @@ namespace BrainFucker.Tests
         [TestCase('-', true)]
         [TestCase('[', true)]
         [TestCase(']', true)]
-        public void isCommandTest(char c, bool isCommand)
+        public void IsCommandTest(char c, bool isCommand)
         {
-            Assert.IsTrue(isCommand == Commands.isCommand(c));
+            Assert.IsTrue(isCommand == Commands.IsCommand(c));
         }
 
+        /// <summary>
+        /// Test to check that <see cref="Commands.IsCommand(char)"/> is working as expected.
+        /// </summary>
+        /// <param name="inputProgram">A test program.</param>
+        /// <param name="expectedOutputProgram">A stripped version of the input used as reference.</param>
         [TestCase("++--+-+->><<<><>,.,.[[[]]][][]..,,<><<>>[][]", "++--+-+->><<<><>,.,.[[[]]][][]..,,<><<>>[][]")]
         [TestCase("hello++--", "++--")]
         [TestCase(">,.,.[[[[    ]]]][][]++--b++--", ">,.,.[[[[]]]][][]++--++--")]
@@ -48,7 +60,6 @@ namespace BrainFucker.Tests
             {
                 Assert.IsTrue(result[i] == expected[i]);
             }
-
         }
     }
 }

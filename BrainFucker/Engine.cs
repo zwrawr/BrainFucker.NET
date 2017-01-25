@@ -61,6 +61,8 @@ namespace BrainFucker
         /// Runs a brain fuck program
         /// </summary>
         /// <param name="program">The program to be run</param>
+        /// <param name="input"> The input to the program. </param>
+        /// <returns>The outputs from the program</returns>
         public string Run(string program, string input)
         {
             this.program = program;
@@ -78,11 +80,13 @@ namespace BrainFucker
         /// <summary>
         /// Re runs the last program
         /// </summary>
+        /// <param name="input"> The input to the program. </param>
+        /// <returns>The outputs from the program</returns>
         public string Rerun(string input)
         {
             if (this.program != null)
             {
-                return this.Interpret(this.program.ToCharArray(),input.ToCharArray());
+                return this.Interpret(this.program.ToCharArray(), input.ToCharArray());
             }
             else
             {
@@ -94,6 +98,8 @@ namespace BrainFucker
         /// Interpreter for brain fuck. This function is what actually runs brain fuck. 
         /// </summary>
         /// <param name="commands"> The program to be ran. </param>
+        /// <param name="inputs"> The inputs to the program. </param>
+        /// <returns>The outputs from the program</returns>
         private string Interpret(char[] commands, char[] inputs)
         {
             StringBuilder builder = new StringBuilder();
@@ -129,7 +135,7 @@ namespace BrainFucker
 
                     case Commands.IN:
 
-                        this.data[this.dataPointer] = (byte)inputs[inputPointer];
+                        this.data[this.dataPointer] = (byte)inputs[this.inputPointer];
                         this.inputPointer++;
                         break;
 
@@ -207,7 +213,6 @@ namespace BrainFucker
             this.dataPointer = 0;
             this.programPointer = 0;
             this.inputPointer = 0;
-
         }
     }
 }

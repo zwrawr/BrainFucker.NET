@@ -78,7 +78,7 @@ namespace BrainFucker
             bool isValid = true;
             foreach (char c in commands)
             {
-                isValid = Commands.isCommand(c);
+                isValid = Commands.IsCommand(c);
 
                 if (!isValid)
                 {

@@ -12,14 +12,44 @@ namespace BrainFucker
     /// </summary>
     public static class Commands
     {
-
+        /// <summary>
+        /// Increments the dataPointer.
+        /// </summary>
         public const char NEXT = '>';
+
+        /// <summary>
+        /// Decrements the dataPointer.
+        /// </summary>
         public const char PREV = '<';
+
+        /// <summary>
+        /// Increments the value in memory at the current dataPointer.
+        /// </summary>
         public const char INC = '+';
+
+        /// <summary>
+        /// Decrements the value in memory at the current dataPointer.
+        /// </summary>
         public const char DEC = '-';
+
+        /// <summary>
+        /// Outputs the value in memory at the current dataPointer.
+        /// </summary>
         public const char OUT = '.';
+
+        /// <summary>
+        /// Inputs a value and places its value in memory at the current dataPointer.
+        /// </summary>
         public const char IN = ',';
+
+        /// <summary>
+        /// Begins a loop.
+        /// </summary>
         public const char BL = '[';
+
+        /// <summary>
+        /// Ends a loop.
+        /// </summary>
         public const char BR = ']';
 
         /// <summary>
@@ -27,7 +57,7 @@ namespace BrainFucker
         /// </summary>
         /// <param name="command">The possible command</param>
         /// <returns>A boolean indicating weather the input was a valid command.</returns>
-        public static bool isCommand(char command)
+        public static bool IsCommand(char command)
         {
             switch (command)
             {
@@ -52,13 +82,18 @@ namespace BrainFucker
             }
         }
 
+        /// <summary>
+        /// Strips all non command characters from a program.
+        /// </summary>
+        /// <param name="program">THe program to be sanitized.</param>
+        /// <returns>The sanitized version of the program.</returns>
         public static char[] StripNonCommands(char[] program)
         {
             List<char> commands = new List<char>();
 
             foreach (char c in program)
             {
-                if (Commands.isCommand(c))
+                if (Commands.IsCommand(c))
                 {
                     commands.Add(c);
                 }
