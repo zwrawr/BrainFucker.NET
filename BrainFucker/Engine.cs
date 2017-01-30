@@ -18,7 +18,7 @@ namespace BrainFucker
         /// <summary>
         /// The amount of memory that this brain fuck engine has.
         /// </summary>
-        private const int dataSize = 30000;
+        private const int DataSize = 30000;
 
         /// <summary>
         /// The memory for this brain fuck engine.
@@ -53,7 +53,7 @@ namespace BrainFucker
         /// </summary>
         public Engine()
         {
-            this.data = new byte[Engine.dataSize];
+            this.data = new byte[Engine.DataSize];
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace BrainFucker
         /// <param name="program">The program to be run</param>
         /// <param name="input"> The input to the program. </param>
         /// <param name="timeLimit">The maximum time in milliseconds the program will be allowed to run for.
-        /// Set to Zero for no time limit. Defaults to 1000ms</param>
+        /// Set to Zero for no time limit. Defaults to 1000 milliseconds</param>
         /// <returns>The outputs from the program</returns>
         public string Run(string program, string input, int timeLimit = 1000)
         {
@@ -102,7 +102,7 @@ namespace BrainFucker
         /// </summary>
         /// <param name="input"> The input to the program. </param>
         /// <param name="timeLimit">The maximum time in milliseconds the program will be allowed to run for.
-        /// Set to Zero for no time limit. Defaults to 1000ms</param>
+        /// Set to Zero for no time limit. Defaults to 1000 milliseconds</param>
         /// <returns>The outputs from the program</returns>
         public string Rerun(string input, int timeLimit = 1000)
         {
@@ -110,7 +110,7 @@ namespace BrainFucker
             {
                 this.Init();
 
-                return this.Run(this.program,input,timeLimit);
+                return this.Run(this.program, input, timeLimit);
             }
             else
             {
@@ -135,7 +135,7 @@ namespace BrainFucker
         /// <returns>The path to the created file.</returns>
         public string DumpMemoryToFile(bool formatted, string path = "")
         {
-            if (path == "")
+            if (path == string.Empty)
             {
                 path = string.Format("{0}/BF", Path.GetTempPath());
             }
@@ -150,14 +150,14 @@ namespace BrainFucker
 
                 using (StreamWriter sw = new StreamWriter(fs))
                 {
-                    for (int i = 0; i < dataSize; i++)
+                    for (int i = 0; i < DataSize; i++)
                     {
                         if (i % 32 == 0)
                         {
                             sw.Write(sw.NewLine);
                         }
 
-                        sw.Write(this.data[i].ToString("X2")+" ");
+                        sw.Write(this.data[i].ToString("X2") + " ");
                     }
                 }
 
@@ -195,12 +195,12 @@ namespace BrainFucker
                 {
                     case Commands.NEXT:
 
-                        this.dataPointer = (this.dataPointer == Engine.dataSize - 1) ? 0 : this.dataPointer + 1;
+                        this.dataPointer = (this.dataPointer == Engine.DataSize - 1) ? 0 : this.dataPointer + 1;
                         break;
 
                     case Commands.PREV:
 
-                        this.dataPointer = (this.dataPointer == 0) ? Engine.dataSize - 1 : this.dataPointer - 1;
+                        this.dataPointer = (this.dataPointer == 0) ? Engine.DataSize - 1 : this.dataPointer - 1;
                         break;
 
                     case Commands.INC:
@@ -288,7 +288,7 @@ namespace BrainFucker
         private void Init()
         {
             // zero out memory
-            for (int i = 0; i < Engine.dataSize; i++)
+            for (int i = 0; i < Engine.DataSize; i++)
             {
                 this.data[i] = 0;
             }

@@ -101,6 +101,11 @@ namespace BrainFucker.Tests
             Assert.IsTrue(info, string.Format("expected {0} =/= input {1}", expected_1, output));
         }
 
+        /// <summary>
+        /// Test the dump memory to file function.
+        /// </summary>
+        /// <param name="program">The program to run.</param>
+        /// <param name="expected">The expected memory dump to file.</param>
         [TestCase("++++++++++[>++++++++++<-]", new byte[] { 0, 100 })]
         [TestCase(">>++++>+++>++>+>>>>->-->--->----", new byte[] { 0, 0, 4, 3, 2, 1, 0, 0, 0, 255, 254, 253, 252 })]
         [TestCase("+++++>++++>+++>++>+>>->-->--->---->-----", new byte[] { 5, 4, 3, 2, 1, 0, 255, 254, 253, 252, 251 })]
@@ -113,11 +118,11 @@ namespace BrainFucker.Tests
             string filepath = bfe.DumpMemoryToFile(false);
             Assert.IsNotNull(filepath);
 
-            // check file exists
+            // Check file exists.
             Assert.IsTrue(File.Exists(filepath));
 
-            // read file in and validate.
-            using (BinaryReader br = new BinaryReader(File.Open(filepath,FileMode.Open)))
+            // Read file in and validate.
+            using (BinaryReader br = new BinaryReader(File.Open(filepath, FileMode.Open)))
             {
                 for (int i = 0; i < 30000; i++)
                 {
@@ -133,13 +138,17 @@ namespace BrainFucker.Tests
                     }
                 }
             }
-
         }
 
+        /// <summary>
+        /// Test the memory dump function.
+        /// </summary>
+        /// <param name="program">The program to run.</param>
+        /// <param name="expected">The expected memory dump info</param>
         [TestCase("++++++++++[>++++++++++<-]", new byte[] { 0, 100 })]
-        [TestCase(">>++++>+++>++>+>>>>->-->--->----", new byte[] {0, 0, 4, 3, 2, 1, 0, 0, 0, 255, 254, 253, 252 })]
-        [TestCase("+++++>++++>+++>++>+>>->-->--->---->-----", new byte[] { 5, 4, 3, 2, 1, 0, 255, 254, 253, 252, 251})]
-        public void Test_DumpMemory( string program, byte[] expected)
+        [TestCase(">>++++>+++>++>+>>>>->-->--->----", new byte[] { 0, 0, 4, 3, 2, 1, 0, 0, 0, 255, 254, 253, 252 })]
+        [TestCase("+++++>++++>+++>++>+>>->-->--->---->-----", new byte[] { 5, 4, 3, 2, 1, 0, 255, 254, 253, 252, 251 })]
+        public void Test_DumpMemory(string program, byte[] expected)
         {
             Engine bfe = new Engine();
 
@@ -159,7 +168,6 @@ namespace BrainFucker.Tests
                 }
             }
         }
-
 
 /*
         // These tests are timing dependent so don't run them on travisCI.
