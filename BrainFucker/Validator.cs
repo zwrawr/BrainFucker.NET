@@ -122,9 +122,10 @@ namespace BrainFucker
                         {
                             do { i++; } while (commands[i] != '\n' && commands[i] != '\r');
                         }
-                        else if (!isValid && commands[i] == '/' && commands[i + 1] == '*') // multi line comment start.
+                        else if ( commands[i] == '/' && commands[i + 1] == '*') // multi line comment start.
                         {
                             do { i++; } while (!(commands[i] == '*' && commands[i + 1] == '/'));
+                            i++;
                         }
                         else
                         {
