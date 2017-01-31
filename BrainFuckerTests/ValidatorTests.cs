@@ -69,5 +69,20 @@ namespace BrainFucker.Tests
         {
             Assert.IsTrue(isValid == Validator.CheckForInvalidCommands(program.ToCharArray()));
         }
+
+        [TestCase("++++",Validator.Mode.STRICT, true)]
+        [TestCase("+++ +", Validator.Mode.STRICT, false)]
+        [TestCase("+++a+", Validator.Mode.STRICT, false)]
+        [TestCase("++++", Validator.Mode.WHITESPACE, true)]
+        [TestCase("+++ +", Validator.Mode.WHITESPACE, true)]
+        [TestCase("+++a+", Validator.Mode.WHITESPACE, false)]
+        [TestCase("+++ //hello\n+", Validator.Mode.COMMENTS, true)]
+        [TestCase("+//abcde\n++/*words*/+", Validator.Mode.COMMENTS, true)]
+        [TestCase("+a+//abcde\n++/*words*/+", Validator.Mode.COMMENTS, false)]
+        [TestCase("+a+//abcde\n++/*words*/+", Validator.Mode.ALL, true)]
+        public void InvalidCommands_ValidationModes_Test(string program, Validator.Mode mode, bool isValid)
+        {
+            Assert.IsTrue(isValid == Validator.CheckForInvalidCommands(program.ToCharArray(),mode));
+        }
     }
 }
