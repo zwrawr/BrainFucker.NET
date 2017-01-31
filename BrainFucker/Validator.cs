@@ -118,7 +118,7 @@ namespace BrainFucker
                 {
                     if (!(c == ' ' || c == '\n' || c == '\t' || c == '\r'))
                     {
-                        if (!isValid && commands[i] == '/' && commands[i + 1] == '/') // in line comment start.
+                        if ( commands[i] == '/' && commands[i + 1] == '/') // in line comment start.
                         {
                             do { i++; } while (commands[i] != '\n' && commands[i] != '\r');
                         }

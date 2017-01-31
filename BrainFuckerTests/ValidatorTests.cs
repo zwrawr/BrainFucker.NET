@@ -77,6 +77,7 @@ namespace BrainFucker.Tests
         [TestCase("+++ +", Validator.Mode.WHITESPACE, true)]
         [TestCase("+++a+", Validator.Mode.WHITESPACE, false)]
         [TestCase("+++ //hello\n+", Validator.Mode.COMMENTS, true)]
+        [TestCase("++/*hello*/++", Validator.Mode.COMMENTS, true)]
         [TestCase("+//abcde\n++/*words*/+", Validator.Mode.COMMENTS, true)]
         [TestCase("+a+//abcde\n++/*words*/+", Validator.Mode.COMMENTS, false)]
         [TestCase("+a+//abcde\n++/*words*/+", Validator.Mode.ALL, true)]
