@@ -57,7 +57,14 @@ namespace BrainFucker
             this.data = new byte[Engine.DataSize];
         }
 
-
+        /// <summary>
+        /// Runs a brain fuck program
+        /// </summary>
+        /// <param name="program">The program to be run</param>
+        /// <param name="input"> The input to the program, in the form of a string.</param>
+        /// <param name="timeLimit">The maximum time in milliseconds the program will be allowed to run for.
+        /// Set to Zero for no time limit. Defaults to 1000 milliseconds</param>
+        /// <returns>The outputs from the program, in the form of a string.</returns>
         public string Run(string program, string input, int timeLimit = 1000)
         {
             char[] result = Run(program, input.ToCharArray(), timeLimit);
@@ -70,6 +77,14 @@ namespace BrainFucker
             return new string(result);
         }
 
+        /// <summary>
+        /// Runs a brain fuck program.
+        /// </summary>
+        /// <param name="program">The program to be run</param>
+        /// <param name="input"> The input to the program, in the form of a char array.</param>
+        /// <param name="timeLimit">The maximum time in milliseconds the program will be allowed to run for.
+        /// Set to Zero for no time limit. Defaults to 1000 milliseconds</param>
+        /// <returns>The outputs from the program, in the form of a char array.</returns>
         public char[] Run(string program, char[] input, int timeLimit = 1000)
         {
             byte[] _input = new byte[input.Length];
@@ -87,13 +102,13 @@ namespace BrainFucker
         }
 
         /// <summary>
-        /// Runs a brain fuck program
+        /// Runs a brain fuck program.
         /// </summary>
         /// <param name="program">The program to be run</param>
-        /// <param name="input"> The input to the program. </param>
+        /// <param name="input"> The input to the program, in the form of a byte array.</param>
         /// <param name="timeLimit">The maximum time in milliseconds the program will be allowed to run for.
         /// Set to Zero for no time limit. Defaults to 1000 milliseconds</param>
-        /// <returns>The outputs from the program</returns>
+        /// <returns>The outputs from the program, in the form of a byte array.</returns>
         public byte[] Run(string program, byte[] input, int timeLimit = 1000)
         {
             this.Init();
@@ -147,6 +162,13 @@ namespace BrainFucker
             }
         }
 
+        /// <summary>
+        /// Re runs the last program
+        /// </summary>
+        /// <param name="input"> The input to the program. </param>
+        /// <param name="timeLimit">The maximum time in milliseconds the program will be allowed to run for.
+        /// Set to Zero for no time limit. Defaults to 1000 milliseconds</param>
+        /// <returns>The outputs from the program</returns>
         public char[] Rerun(char[] input, int timeLimit = 1000)
         {
             if (this.program != null)
@@ -160,6 +182,13 @@ namespace BrainFucker
             }
         }
 
+        /// <summary>
+        /// Re runs the last program
+        /// </summary>
+        /// <param name="input"> The input to the program. </param>
+        /// <param name="timeLimit">The maximum time in milliseconds the program will be allowed to run for.
+        /// Set to Zero for no time limit. Defaults to 1000 milliseconds</param>
+        /// <returns>The outputs from the program</returns>
         public byte[] Rerun(byte[] input, int timeLimit = 1000)
         {
             if (this.program != null)
