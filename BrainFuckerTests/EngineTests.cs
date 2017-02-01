@@ -44,7 +44,7 @@ namespace BrainFucker.Tests
         }
 
         /// <summary>
-        /// Test checks the operation of the brain fuck Engine using StringReaders and StringWriters .
+        /// Test checks the operation of the brain fuck Engine using Strings .
         /// </summary>
         /// <param name="program">the programs to be ran.</param>
         /// <param name="input">The inputs to the program.</param>
@@ -54,7 +54,7 @@ namespace BrainFucker.Tests
         [TestCase("++>+++++[<+>-]++++++++[<++++++>-]<.", "", "7")]
         [TestCase("++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.", "", "Hello World!\n")]
         [Timeout(100)]
-        public void Test_Engine_Streams(string program, string input, string expected)
+        public void Test_Engine_Strings(string program, string input, string expected)
         {
             Engine bfe = new Engine();
 
@@ -64,6 +64,74 @@ namespace BrainFucker.Tests
 
             Assert.IsTrue(
                 info,
+                string.Format(
+                    "Program ( {0} ), with inputs ( {1} ), expected results of ( {2} ), got results of ( {3} )",
+                    program,
+                    input,
+                    expected,
+                    output));
+        }
+
+        /// <summary>
+        /// Test checks the operation of the brain fuck Engine using char[] .
+        /// </summary>
+        /// <param name="program">the programs to be ran.</param>
+        /// <param name="input">The inputs to the program.</param>
+        /// <param name="expected">The expected output of the system.</param>
+        [TestCase("+++++++++.", new char[0], new char[] { '\t' })]
+        [TestCase(",.", new char[] { '1' }, new char[] { '1' })]
+        [TestCase(",.", new char[] { 'z' }, new char[] { 'z' })]
+        [TestCase("++>+++++[<+>-]++++++++[<++++++>-]<.", new char[0], new char[] { '7' })]
+        [TestCase("++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.", new char[0], new char[] { 'H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd', '!', '\n' })]
+        [Timeout(100)]
+        public void Test_Engine_Chars(string program, char[] input, char[] expected)
+        {
+            Engine bfe = new Engine();
+
+            char[] output = bfe.Run(program, input);
+
+            bool allMatch = true;
+            for (int i = 0; i < output.Length; i++)
+            {
+                allMatch = (expected[i] == output[i]) ? allMatch : false;
+            }
+               
+            Assert.IsTrue(
+                allMatch,
+                string.Format(
+                    "Program ( {0} ), with inputs ( {1} ), expected results of ( {2} ), got results of ( {3} )",
+                    program,
+                    input,
+                    expected,
+                    output));
+        }
+
+        /// <summary>
+        /// Test checks the operation of the brain fuck Engine using byte[] .
+        /// </summary>
+        /// <param name="program">the programs to be ran.</param>
+        /// <param name="input">The inputs to the program.</param>
+        /// <param name="expected">The expected output of the system.</param>
+        [TestCase("+++++++++.", new byte[0], new byte[] { 9 })]
+        [TestCase(",.", new byte[] { 1 }, new byte[] { 1 })]
+        [TestCase(",.", new byte[] { 97 }, new byte[] { 97 })]
+        [TestCase("++>+++++[<+>-]++++++++[<++++++>-]<.", new byte[0], new byte[] { 55 })]
+        [TestCase("++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.", new byte[0], new byte[] { 72, 101, 108, 108, 111, 32, 87, 111, 114, 108, 100, 33, 10 })]
+        [Timeout(100)]
+        public void Test_Engine_Bytes(string program, byte[] input, byte[] expected)
+        {
+            Engine bfe = new Engine();
+
+            byte[] output = bfe.Run(program, input);
+
+            bool allMatch = true;
+            for (int i = 0; i < output.Length; i++)
+            {
+                allMatch = (expected[i] == output[i]) ? allMatch : false;
+            }
+
+            Assert.IsTrue(
+                allMatch,
                 string.Format(
                     "Program ( {0} ), with inputs ( {1} ), expected results of ( {2} ), got results of ( {3} )",
                     program,
