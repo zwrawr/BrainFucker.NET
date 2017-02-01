@@ -6,6 +6,7 @@
 namespace BrainFucker
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Text;
     using System.Threading;
@@ -56,6 +57,35 @@ namespace BrainFucker
             this.data = new byte[Engine.DataSize];
         }
 
+
+        public string Run(string program, string input, int timeLimit = 1000)
+        {
+            char[] result = Run(program, input.ToCharArray(), timeLimit);
+
+            for (int i = 0; i < result.Length; i++)
+            {
+                result[i] = Convert.ToChar(result[i]);
+            }
+
+            return new string(result);
+        }
+
+        public char[] Run(string program, char[] input, int timeLimit = 1000)
+        {
+            byte[] _input = new byte[input.Length];
+            for (int i = 0; i < input.Length; i++)
+            {
+                _input[i] = Convert.ToByte(input[i]);
+            }
+
+            byte[] rawResult = Run(program, _input, timeLimit);
+
+
+            char[] result = Encoding.ASCII.GetString(rawResult).ToCharArray();
+
+            return result;
+        }
+
         /// <summary>
         /// Runs a brain fuck program
         /// </summary>
@@ -64,7 +94,7 @@ namespace BrainFucker
         /// <param name="timeLimit">The maximum time in milliseconds the program will be allowed to run for.
         /// Set to Zero for no time limit. Defaults to 1000 milliseconds</param>
         /// <returns>The outputs from the program</returns>
-        public string Run(string program, string input, int timeLimit = 1000)
+        public byte[] Run(string program, byte[] input, int timeLimit = 1000)
         {
             this.Init();
 
@@ -74,9 +104,9 @@ namespace BrainFucker
 
             if (isValid && timeLimit > 0)
             {
-                string output = string.Empty;
+                byte[] output = null;
 
-                Thread thread = new Thread(() => output = this.Interpret(program.ToCharArray(), input.ToCharArray()));
+                Thread thread = new Thread(() => output = this.Interpret(program.ToCharArray(), input));
                 thread.Start();
 
                 bool completed = thread.Join(timeLimit);
@@ -89,7 +119,7 @@ namespace BrainFucker
             }
             else if (isValid && timeLimit == 0)
             {
-                return this.Interpret(program.ToCharArray(), input.ToCharArray());
+                return this.Interpret(program.ToCharArray(), input);
             }
             else
             {
@@ -185,9 +215,9 @@ namespace BrainFucker
         /// <param name="commands"> The program to be ran. </param>
         /// <param name="inputs"> The inputs to the program. </param>
         /// <returns>The outputs from the program</returns>
-        private string Interpret(char[] commands, char[] inputs)
+        private byte[] Interpret(char[] commands, byte[] inputs)
         {
-            StringBuilder builder = new StringBuilder();
+            List<byte> builder = new List<byte>();
             int loopDepth = 0;
             for (this.programPointer = 0; this.programPointer < this.program.Length; this.programPointer++)
             {
@@ -215,7 +245,7 @@ namespace BrainFucker
 
                     case Commands.OUT:
 
-                        builder.Append((char)this.data[this.dataPointer]);
+                        builder.Add(this.data[this.dataPointer]);
                         break;
 
                     case Commands.IN:
@@ -279,7 +309,7 @@ namespace BrainFucker
                 }
             }
 
-            return builder.ToString();
+            return builder.ToArray();
         }
 
         /// <summary>
