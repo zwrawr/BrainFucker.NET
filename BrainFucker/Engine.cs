@@ -139,7 +139,32 @@ namespace BrainFucker
             if (this.program != null)
             {
                 this.Init();
+                return this.Run(this.program, input, timeLimit);
+            }
+            else
+            {
+                return null;
+            }
+        }
 
+        public char[] Rerun(char[] input, int timeLimit = 1000)
+        {
+            if (this.program != null)
+            {
+                this.Init();
+                return this.Run(this.program, input, timeLimit);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public byte[] Rerun(byte[] input, int timeLimit = 1000)
+        {
+            if (this.program != null)
+            {
+                this.Init();
                 return this.Run(this.program, input, timeLimit);
             }
             else
