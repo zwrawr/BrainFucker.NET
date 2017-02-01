@@ -49,11 +49,17 @@ namespace BrainFucker
         /// </summary>
         private string program;
 
+
+        private bool programStarted = false;
+        private bool programFinished = false;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Engine"/> class. 
         /// </summary>
         public Engine()
         {
+            this.programStarted = false;
+            this.programFinished = false;
             this.data = new byte[Engine.DataSize];
         }
 
@@ -67,7 +73,7 @@ namespace BrainFucker
         /// <returns>The outputs from the program, in the form of a string.</returns>
         public string Run(string program, string input, int timeLimit = 1000)
         {
-            char[] result = Run(program, input.ToCharArray(), timeLimit);
+            char[] result = this.Run(program, input.ToCharArray(), timeLimit);
 
             for (int i = 0; i < result.Length; i++)
             {
@@ -87,15 +93,13 @@ namespace BrainFucker
         /// <returns>The outputs from the program, in the form of a char array.</returns>
         public char[] Run(string program, char[] input, int timeLimit = 1000)
         {
-            byte[] _input = new byte[input.Length];
+            byte[] inputBytes = new byte[input.Length];
             for (int i = 0; i < input.Length; i++)
             {
-                _input[i] = Convert.ToByte(input[i]);
+                inputBytes[i] = Convert.ToByte(input[i]);
             }
 
-            byte[] rawResult = Run(program, _input, timeLimit);
-
-
+            byte[] rawResult = this.Run(program, inputBytes, timeLimit);
             char[] result = Encoding.ASCII.GetString(rawResult).ToCharArray();
 
             return result;
@@ -119,6 +123,8 @@ namespace BrainFucker
 
             if (isValid && timeLimit > 0)
             {
+                this.programStarted = true;
+
                 byte[] output = null;
 
                 Thread thread = new Thread(() => output = this.Interpret(program.ToCharArray(), input));
@@ -129,17 +135,24 @@ namespace BrainFucker
                 {
                     return null;
                 }
-
+                this.programFinished = true;
                 return output;
             }
             else if (isValid && timeLimit == 0)
             {
-                return this.Interpret(program.ToCharArray(), input);
+                this.programStarted = true;
+
+                byte[] output = this.Interpret(program.ToCharArray(), input);
+
+                this.programFinished = true;
+
+                return output;
             }
             else
             {
                 return null;
             }
+
         }
 
         /// <summary>
@@ -371,6 +384,10 @@ namespace BrainFucker
         /// </summary>
         private void Init()
         {
+            // reset program running info
+            this.programStarted = false;
+            this.programFinished = false;
+
             // zero out memory
             for (int i = 0; i < Engine.DataSize; i++)
             {
