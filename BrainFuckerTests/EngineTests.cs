@@ -169,6 +169,83 @@ namespace BrainFucker.Tests
             Assert.IsTrue(info, string.Format("expected {0} =/= input {1}", expected_1, output));
         }
 
+
+        /// <summary>
+        /// Tests the rerun method of <see cref="Engine"/>.
+        /// </summary>
+        /// <param name="program">The program to be ran.</param>
+        /// <param name="input_1">The first input.</param>
+        /// <param name="expected_1">The expected out put of the program with the first input.</param>
+        /// <param name="input_2">THe second input.</param>
+        /// <param name="expected_2">THe expected output of the program with the second input.</param>
+        [TestCase(",.", new char[] { '1' }, new char[] { '1' }, new char[] { '4' }, new char[] { '4' })]
+        [TestCase(",.", new char[] { 'a' }, new char[] { 'a' }, new char[] { 'Z' }, new char[] { 'Z' })]
+        [TestCase(",>+++++++++[<----->-]<--->,>+++++++++[<----->-]<---<[->+<]>>+++++++++[<+++++>-]<+++.", new char[] { '1', '2' }, new char[] { '3' }, new char[] { '3', '4' }, new char[] { '7' })]
+        [Timeout(1000)]
+        public void Test_ReRun(string program, char[] input_1, char[] expected_1, char[] input_2, char[] expected_2)
+        {
+            Engine bfe = new Engine();
+
+            char[] output = bfe.Run(program, input_1);
+
+            bool match = true;
+            match = output.Length == expected_1.Length ? match : false;
+            for (int i = 0; i < output.Length; i++)
+            {
+                match = output[i] == expected_1[i] ? match : false ;
+            }
+
+            Assert.IsTrue(match, string.Format("expected {0} =/= input {1}", expected_1, output));
+
+            output = bfe.Rerun(input_2);
+
+            match = output.Length == expected_2.Length ? match : false;
+            for (int i = 0; i < output.Length; i++)
+            {
+                match = output[i] == expected_2[i] ? match : false;
+            }
+
+            Assert.IsTrue(match, string.Format("expected {0} =/= input {1}", expected_1, output));
+        }
+
+        /// <summary>
+        /// Tests the rerun method of <see cref="Engine"/>.
+        /// </summary>
+        /// <param name="program">The program to be ran.</param>
+        /// <param name="input_1">The first input.</param>
+        /// <param name="expected_1">The expected out put of the program with the first input.</param>
+        /// <param name="input_2">THe second input.</param>
+        /// <param name="expected_2">THe expected output of the program with the second input.</param>
+        [TestCase(",.", new byte[] { 1 }, new byte[] { 1 }, new byte[] { 4 }, new byte[] { 4 })]
+        [TestCase(",.", new byte[] { 53 }, new byte[] { 53 }, new byte[] { 111 }, new byte[] { 111 })]
+        [TestCase(",>+++++++++[<----->-]<--->,>+++++++++[<----->-]<---<[->+<]>>+++++++++[<+++++>-]<+++.", new byte[] { 49, 50 }, new byte[] { 51 }, new byte[] { 51, 52 }, new byte[] { 55 })]
+        [Timeout(1000)]
+        public void Test_ReRun(string program, byte[] input_1, byte[] expected_1, byte[] input_2, byte[] expected_2)
+        {
+            Engine bfe = new Engine();
+
+            byte[] output = bfe.Run(program, input_1);
+
+            bool match = true;
+            match = output.Length == expected_1.Length ? match : false;
+            for (int i = 0; i < output.Length; i++)
+            {
+                match = output[i] == expected_1[i] ? match : false;
+            }
+
+            Assert.IsTrue(match, string.Format("expected {0} =/= input {1}", expected_1, output));
+
+            output = bfe.Rerun(input_2);
+
+            match = output.Length == expected_2.Length ? match : false;
+            for (int i = 0; i < output.Length; i++)
+            {
+                match = output[i] == expected_2[i] ? match : false;
+            }
+
+            Assert.IsTrue(match, string.Format("expected {0} =/= input {1}", expected_1, output));
+        }
+
         /// <summary>
         /// Test the dump memory to file function.
         /// </summary>
