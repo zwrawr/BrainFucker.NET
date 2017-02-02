@@ -169,7 +169,6 @@ namespace BrainFucker.Tests
             Assert.IsTrue(info, string.Format("expected {0} =/= input {1}", expected_1, output));
         }
 
-
         /// <summary>
         /// Tests the rerun method of <see cref="Engine"/>.
         /// </summary>
@@ -192,7 +191,7 @@ namespace BrainFucker.Tests
             match = output.Length == expected_1.Length ? match : false;
             for (int i = 0; i < output.Length; i++)
             {
-                match = output[i] == expected_1[i] ? match : false ;
+                match = output[i] == expected_1[i] ? match : false;
             }
 
             Assert.IsTrue(match, string.Format("expected {0} =/= input {1}", expected_1, output));
