@@ -221,9 +221,6 @@ namespace BrainFucker
         }
 
 
-        public byte[] step(byte )
-
-
         /// <summary>
         /// Gets a dump of the memory.
         /// </summary>
