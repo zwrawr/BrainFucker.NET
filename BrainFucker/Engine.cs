@@ -47,7 +47,7 @@ namespace BrainFucker
         /// <summary>
         /// The brain fuck program that is being ran.
         /// </summary>
-        private string program;
+        private char[] program;
 
 
         private bool programStarted = false;
@@ -61,6 +61,11 @@ namespace BrainFucker
             this.programStarted = false;
             this.programFinished = false;
             this.data = new byte[Engine.DataSize];
+        }
+
+        public char[] Program {
+            get { return this.program; }
+            set { this.program = value; }
         }
 
         /// <summary>
@@ -100,8 +105,8 @@ namespace BrainFucker
             }
 
             byte[] rawResult = this.Run(program, inputBytes, timeLimit);
+            
             char[] result = Encoding.ASCII.GetString(rawResult).ToCharArray();
-
             return result;
         }
 
@@ -117,7 +122,7 @@ namespace BrainFucker
         {
             this.Init();
 
-            this.program = program;
+            this.program = program.ToCharArray();
 
             bool isValid = Validator.Validate(program);
 
@@ -127,7 +132,7 @@ namespace BrainFucker
 
                 byte[] output = null;
 
-                Thread thread = new Thread(() => output = this.Interpret(program.ToCharArray(), input));
+                Thread thread = new Thread(() => output = this.Interpret(this.program, input));
                 thread.Start();
 
                 bool completed = thread.Join(timeLimit);
@@ -142,7 +147,7 @@ namespace BrainFucker
             {
                 this.programStarted = true;
 
-                byte[] output = this.Interpret(program.ToCharArray(), input);
+                byte[] output = this.Interpret(this.program, input);
 
                 this.programFinished = true;
 
@@ -167,7 +172,7 @@ namespace BrainFucker
             if (this.program != null)
             {
                 this.Init();
-                return this.Run(this.program, input, timeLimit);
+                return this.Run(new string( this.program ), input, timeLimit);
             }
             else
             {
@@ -187,7 +192,7 @@ namespace BrainFucker
             if (this.program != null)
             {
                 this.Init();
-                return this.Run(this.program, input, timeLimit);
+                return this.Run(new string(this.program), input, timeLimit);
             }
             else
             {
@@ -207,7 +212,7 @@ namespace BrainFucker
             if (this.program != null)
             {
                 this.Init();
-                return this.Run(this.program, input, timeLimit);
+                return this.Run(new string(this.program), input, timeLimit);
             }
             else
             {
@@ -288,95 +293,103 @@ namespace BrainFucker
             int loopDepth = 0;
             for (this.programPointer = 0; this.programPointer < this.program.Length; this.programPointer++)
             {
-                switch (commands[this.programPointer])
-                {
-                    case Commands.NEXT:
-
-                        this.dataPointer = (this.dataPointer == Engine.DataSize - 1) ? 0 : this.dataPointer + 1;
-                        break;
-
-                    case Commands.PREV:
-
-                        this.dataPointer = (this.dataPointer == 0) ? Engine.DataSize - 1 : this.dataPointer - 1;
-                        break;
-
-                    case Commands.INC:
-
-                        this.data[this.dataPointer]++;
-                        break;
-
-                    case Commands.DEC:
-
-                        this.data[this.dataPointer]--;
-                        break;
-
-                    case Commands.OUT:
-
-                        builder.Add(this.data[this.dataPointer]);
-                        break;
-
-                    case Commands.IN:
-
-                        this.data[this.dataPointer] = (byte)inputs[this.inputPointer];
-                        this.inputPointer++;
-                        break;
-
-                    case Commands.BL:
-
-                        if (this.data[this.dataPointer] == 0)
-                        {
-                            this.programPointer++;
-
-                            while (loopDepth > 0 || commands[this.programPointer] != Commands.BR)
-                            {
-                                if (this.program[this.programPointer] == Commands.BL)
-                                {
-                                    loopDepth++;
-                                }
-
-                                if (this.program[this.programPointer] == Commands.BR)
-                                {
-                                    loopDepth--;
-                                }
-
-                                this.programPointer++;
-                            }
-                        }
-
-                        break;
-
-                    case Commands.BR:
-
-                        if (this.data[this.dataPointer] != 0)
-                        {
-                            this.programPointer--;
-
-                            while (loopDepth > 0 || commands[this.programPointer] != Commands.BL)
-                            {
-                                if (this.program[this.programPointer] == Commands.BR)
-                                {
-                                    loopDepth++;
-                                }
-
-                                if (this.program[this.programPointer] == Commands.BL)
-                                {
-                                    loopDepth--;
-                                }
-
-                                this.programPointer--;
-                            }
-
-                            this.programPointer--;
-                        }
-
-                        break;
-
-                    default:
-                        throw new Exception("Undefined command");
-                }
+                loopDepth = interpretCommand(commands, inputs, builder, loopDepth);
             }
 
             return builder.ToArray();
+        }
+
+
+        private int interpretCommand(char[] commands, byte[] inputs, List<byte> outputs, int loopDepth)
+        {
+            switch (commands[this.programPointer])
+            {
+                case Commands.NEXT:
+
+                    this.dataPointer = (this.dataPointer == Engine.DataSize - 1) ? 0 : this.dataPointer + 1;
+                    break;
+
+                case Commands.PREV:
+
+                    this.dataPointer = (this.dataPointer == 0) ? Engine.DataSize - 1 : this.dataPointer - 1;
+                    break;
+
+                case Commands.INC:
+
+                    this.data[this.dataPointer]++;
+                    break;
+
+                case Commands.DEC:
+
+                    this.data[this.dataPointer]--;
+                    break;
+
+                case Commands.OUT:
+
+                    outputs.Add(this.data[this.dataPointer]);
+                    break;
+
+                case Commands.IN:
+
+                    this.data[this.dataPointer] = (byte)inputs[this.inputPointer];
+                    this.inputPointer++;
+                    break;
+
+                case Commands.BL:
+
+                    if (this.data[this.dataPointer] == 0)
+                    {
+                        this.programPointer++;
+
+                        while (loopDepth > 0 || commands[this.programPointer] != Commands.BR)
+                        {
+                            if (this.program[this.programPointer] == Commands.BL)
+                            {
+                                loopDepth++;
+                            }
+
+                            if (this.program[this.programPointer] == Commands.BR)
+                            {
+                                loopDepth--;
+                            }
+
+                            this.programPointer++;
+                        }
+                    }
+
+                    break;
+
+                case Commands.BR:
+
+                    if (this.data[this.dataPointer] != 0)
+                    {
+                        this.programPointer--;
+
+                        while (loopDepth > 0 || commands[this.programPointer] != Commands.BL)
+                        {
+                            if (this.program[this.programPointer] == Commands.BR)
+                            {
+                                loopDepth++;
+                            }
+
+                            if (this.program[this.programPointer] == Commands.BL)
+                            {
+                                loopDepth--;
+                            }
+
+                            this.programPointer--;
+                        }
+
+                        this.programPointer--;
+                    }
+
+                    break;
+
+                default:
+                    throw new Exception("Undefined command");
+            }
+            // no outputs so nothing to return;
+            return loopDepth;
         }
 
         /// <summary>
