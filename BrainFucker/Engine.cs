@@ -49,8 +49,14 @@ namespace BrainFucker
         /// </summary>
         private char[] program;
 
-
+        /// <summary>
+        /// Whether the program has started execution.
+        /// </summary>
         private bool programStarted = false;
+
+        /// <summary>
+        /// Whether the program has finished execution.
+        /// </summary>
         private bool programFinished = false;
 
         /// <summary>
@@ -63,9 +69,21 @@ namespace BrainFucker
             this.data = new byte[Engine.DataSize];
         }
 
-        public char[] Program {
-            get { return this.program; }
-            set { this.program = value; }
+        /// <summary>
+        /// Gets or sets the program that this engine will run.
+        /// </summary>
+        public char[] Program
+        {
+            get
+            {
+                return this.program;
+            }
+
+            set
+            {
+                this.program = value;
+                this.Init();
+            }
         }
 
         /// <summary>
@@ -140,6 +158,7 @@ namespace BrainFucker
                 {
                     return null;
                 }
+
                 this.programFinished = true;
                 return output;
             }
@@ -157,7 +176,6 @@ namespace BrainFucker
             {
                 return null;
             }
-
         }
 
         /// <summary>
@@ -172,7 +190,7 @@ namespace BrainFucker
             if (this.program != null)
             {
                 this.Init();
-                return this.Run(new string( this.program ), input, timeLimit);
+                return this.Run(new string(this.program), input, timeLimit);
             }
             else
             {
@@ -219,7 +237,6 @@ namespace BrainFucker
                 return null;
             }
         }
-
 
         /// <summary>
         /// Gets a dump of the memory.
@@ -294,14 +311,21 @@ namespace BrainFucker
             int loopDepth = 0;
             for (this.programPointer = 0; this.programPointer < this.program.Length; this.programPointer++)
             {
-                loopDepth = interpretCommand(commands, inputs, builder, loopDepth);
+                loopDepth = this.InterpretCommand(commands, inputs, builder, loopDepth);
             }
 
             return builder.ToArray();
         }
 
-
-        private int interpretCommand(char[] commands, byte[] inputs, List<byte> outputs, int loopDepth)
+        /// <summary>
+        /// Interpreters a single command.
+        /// </summary>
+        /// <param name="commands">The commands in the program.</param>
+        /// <param name="inputs">The inputs to the program.</param>
+        /// <param name="outputs">The outputs to the program.</param>
+        /// <param name="loopDepth">The current loop depth.</param>
+        /// <returns>The new loop depth.</returns>
+        private int InterpretCommand(char[] commands, byte[] inputs, List<byte> outputs, int loopDepth)
         {
             switch (commands[this.programPointer])
             {
@@ -389,7 +413,7 @@ namespace BrainFucker
                 default:
                     throw new Exception("Undefined command");
             }
-            // no outputs so nothing to return;
+
             return loopDepth;
         }
 
@@ -398,10 +422,6 @@ namespace BrainFucker
         /// </summary>
         private void Init()
         {
-            // reset program running info
-            this.programStarted = false;
-            this.programFinished = false;
-
             // zero out memory
             for (int i = 0; i < Engine.DataSize; i++)
             {
@@ -412,6 +432,10 @@ namespace BrainFucker
             this.dataPointer = 0;
             this.programPointer = 0;
             this.inputPointer = 0;
+
+            // reset program running info
+            this.programStarted = false;
+            this.programFinished = false;
         }
     }
 }
