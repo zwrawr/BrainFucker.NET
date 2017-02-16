@@ -29,7 +29,8 @@ namespace BrainFucker.Tests
         {
             Engine bfe = new Engine();
 
-            string output = bfe.Run(program, input);
+            bfe.Program = program.ToCharArray();
+            string output = bfe.Run(input);
 
             bool info = string.Compare(expected, output) == 0;
 
@@ -57,8 +58,9 @@ namespace BrainFucker.Tests
         public void Test_Engine_Strings(string program, string input, string expected)
         {
             Engine bfe = new Engine();
+            bfe.Program = program.ToCharArray();
 
-            string output = bfe.Run(program, input);
+            string output = bfe.Run(input);
 
             bool info = string.Compare(expected, output) == 0;
 
@@ -87,8 +89,9 @@ namespace BrainFucker.Tests
         public void Test_Engine_Chars(string program, char[] input, char[] expected)
         {
             Engine bfe = new Engine();
+            bfe.Program = program.ToCharArray();
 
-            char[] output = bfe.Run(program, input);
+            char[] output = bfe.Run( input);
 
             bool allMatch = true;
             for (int i = 0; i < output.Length; i++)
@@ -121,8 +124,9 @@ namespace BrainFucker.Tests
         public void Test_Engine_Bytes(string program, byte[] input, byte[] expected)
         {
             Engine bfe = new Engine();
+            bfe.Program = program.ToCharArray();
 
-            byte[] output = bfe.Run(program, input);
+            byte[] output = bfe.Run(input);
 
             bool allMatch = true;
             for (int i = 0; i < output.Length; i++)
@@ -155,14 +159,15 @@ namespace BrainFucker.Tests
         public void Test_ReRun(string program, string input_1, string expected_1, string input_2, string expected_2)
         {
             Engine bfe = new Engine();
+            bfe.Program = program.ToCharArray();
 
-            string output = bfe.Run(program, input_1);
+            string output = bfe.Run( input_1);
 
             bool info = string.Compare(expected_1, output) == 0;
 
             Assert.IsTrue(info, string.Format("expected {0} =/= input {1}", expected_1, output));
 
-            output = bfe.Rerun(input_2);
+            output = bfe.Run(input_2);
 
             info = string.Compare(expected_2, output) == 0;
 
@@ -184,8 +189,9 @@ namespace BrainFucker.Tests
         public void Test_ReRun(string program, char[] input_1, char[] expected_1, char[] input_2, char[] expected_2)
         {
             Engine bfe = new Engine();
+            bfe.Program = program.ToCharArray();
 
-            char[] output = bfe.Run(program, input_1);
+            char[] output = bfe.Run(input_1);
 
             bool match = true;
             match = output.Length == expected_1.Length ? match : false;
@@ -196,7 +202,7 @@ namespace BrainFucker.Tests
 
             Assert.IsTrue(match, string.Format("expected {0} =/= input {1}", expected_1, output));
 
-            output = bfe.Rerun(input_2);
+            output = bfe.Run(input_2);
 
             match = output.Length == expected_2.Length ? match : false;
             for (int i = 0; i < output.Length; i++)
@@ -222,8 +228,9 @@ namespace BrainFucker.Tests
         public void Test_ReRun(string program, byte[] input_1, byte[] expected_1, byte[] input_2, byte[] expected_2)
         {
             Engine bfe = new Engine();
+            bfe.Program = program.ToCharArray();
 
-            byte[] output = bfe.Run(program, input_1);
+            byte[] output = bfe.Run(input_1);
 
             bool match = true;
             match = output.Length == expected_1.Length ? match : false;
@@ -234,7 +241,7 @@ namespace BrainFucker.Tests
 
             Assert.IsTrue(match, string.Format("expected {0} =/= input {1}", expected_1, output));
 
-            output = bfe.Rerun(input_2);
+            output = bfe.Run(input_2);
 
             match = output.Length == expected_2.Length ? match : false;
             for (int i = 0; i < output.Length; i++)
@@ -256,8 +263,9 @@ namespace BrainFucker.Tests
         public void Test_DumpMemoryToFile(string program, byte[] expected)
         {
             Engine bfe = new Engine();
+            bfe.Program = program.ToCharArray();
 
-            string output = bfe.Run(program, string.Empty);
+            string output = bfe.Run(string.Empty);
 
             string filepath = bfe.DumpMemoryToFile(false);
             Assert.IsNotNull(filepath);
@@ -295,8 +303,9 @@ namespace BrainFucker.Tests
         public void Test_DumpMemory(string program, byte[] expected)
         {
             Engine bfe = new Engine();
+            bfe.Program = program.ToCharArray();
 
-            string output = bfe.Run(program, string.Empty);
+            string output = bfe.Run(string.Empty);
 
             byte[] dump = bfe.DumpMemory();
 
@@ -313,36 +322,37 @@ namespace BrainFucker.Tests
             }
         }
 
-/*
-        // These tests are timing dependent so don't run them on travisCI.
+        /*
+                // These tests are timing dependent so don't run them on travisCI.
 
 
-        /// <summary>
-        /// Test checks the operation of the brain fuck Engine using StringReaders and StringWriters .
-        /// </summary>
-        /// <param name="program">the programs to be ran.</param>
-        /// <param name="input">The inputs to the program.</param>
-        /// <param name="expected">The expected output of the system.</param>
-        [TestCase("+++++++++.", 1, true)] 
-        [TestCase(".+[.+]", 0, true)] // Prints ASCII with not timeout
-        [TestCase("++++[>+++++<-]>[<+++++>-]+<+[>[>+>+<<-]++>>[<<+>>-]>>>[-]++>[-]+>>>+[[-]++++++>>>]<<<[[<++++++++<++>>-]+<.<[>----<-]<]<<[>>>>>[>>>[-]+++++++++<[>-<-]+++++++++>[-[<->-]+[<<<]]<[>+<-]>]<<-]<<-]", 10, false)] // test function takes along time
-        [TestCase(".+[.+].+[.+].+[.+].+[.+].+[.+].+[.+].+[.+].+[.+].+[.+].+[.+].+[.+].+[.+]", 2, false)] // prints ASCII multiple times. Should time out.
-        [TestCase(".+[.+].", 2, true)] // prints ASCII
-        [TestCase("+[]", 100, false)] // infinite loop
-        [Timeout(1000)]
-        public void Test_Engine_TimeOut(string program, int timeOut, bool shouldFinish)
-        {
-            Engine bfe = new Engine();
+                /// <summary>
+                /// Test checks the operation of the brain fuck Engine using StringReaders and StringWriters .
+                /// </summary>
+                /// <param name="program">the programs to be ran.</param>
+                /// <param name="input">The inputs to the program.</param>
+                /// <param name="expected">The expected output of the system.</param>
+                [TestCase("+++++++++.", 1, true)] 
+                [TestCase(".+[.+]", 0, true)] // Prints ASCII with not timeout
+                [TestCase("++++[>+++++<-]>[<+++++>-]+<+[>[>+>+<<-]++>>[<<+>>-]>>>[-]++>[-]+>>>+[[-]++++++>>>]<<<[[<++++++++<++>>-]+<.<[>----<-]<]<<[>>>>>[>>>[-]+++++++++<[>-<-]+++++++++>[-[<->-]+[<<<]]<[>+<-]>]<<-]<<-]", 10, false)] // test function takes along time
+                [TestCase(".+[.+].+[.+].+[.+].+[.+].+[.+].+[.+].+[.+].+[.+].+[.+].+[.+].+[.+].+[.+]", 2, false)] // prints ASCII multiple times. Should time out.
+                [TestCase(".+[.+].", 2, true)] // prints ASCII
+                [TestCase("+[]", 100, false)] // infinite loop
+                [Timeout(1000)]
+                public void Test_Engine_TimeOut(string program, int timeOut, bool shouldFinish)
+                {
+                    Engine bfe = new Engine();
+                    bfe.Program = program.ToCharArray();
 
-            string output = bfe.Run(program, string.Empty,timeOut);
+                    string output = bfe.Run(string.Empty,timeOut);
 
-            bool didFinish = output!=null;
+                    bool didFinish = output!=null;
 
-            string message = didFinish ? "program finished":"program didn't finish";
+                    string message = didFinish ? "program finished":"program didn't finish";
 
-            Assert.IsTrue(didFinish == shouldFinish , message);
+                    Assert.IsTrue(didFinish == shouldFinish , message);
 
-        }
-*/
+                }
+        */
     }
 }
