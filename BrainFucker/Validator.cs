@@ -34,11 +34,9 @@ namespace BrainFucker
         /// </summary>
         /// <param name="program">The program to validate</param>
         /// <returns>Returns true if program is valid, if not false</returns>
-        public static bool Validate(string program, Mode vMode = Mode.STRICT)
+        public static bool Validate(char[] commands, Mode vMode = Mode.STRICT)
         {
-            char[] commands = program.ToCharArray();
-
-            if (program.Length == 0)
+            if (commands.Length == 0)
             {
                 return false;
             }
@@ -56,6 +54,17 @@ namespace BrainFucker
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Validates a brain fuck program.
+        /// </summary>
+        /// <param name="program">The program to validate</param>
+        /// <returns>Returns true if program is valid, if not false</returns>
+        public static bool Validate(string program, Mode vMode = Mode.STRICT)
+        {
+            char[] commands = program.ToCharArray();
+            return Validate(commands, vMode);
         }
 
         /// <summary>

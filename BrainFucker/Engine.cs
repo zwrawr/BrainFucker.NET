@@ -47,11 +47,22 @@ namespace BrainFucker
         /// <summary>
         /// The brain fuck program that is being ran.
         /// </summary>
-        private string program;
+        private char[] program;
 
-
+        /// <summary>
+        /// Whether the program has started execution.
+        /// </summary>
         private bool programStarted = false;
+
+        /// <summary>
+        /// Whether the program has finished execution.
+        /// </summary>
         private bool programFinished = false;
+
+        /// <summary>
+        /// How many loops are we in at the current location of the programPointer.
+        /// </summary>
+        private int loopDepth = 0;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Engine"/> class. 
@@ -64,16 +75,56 @@ namespace BrainFucker
         }
 
         /// <summary>
+        /// Gets or sets the program that this engine will run.
+        /// </summary>
+        public char[] Program
+        {
+            get
+            {
+                return this.program;
+            }
+
+            set
+            {
+                this.program = value;
+                this.Init();
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the program has stared running.
+        /// </summary>
+        public bool Started
+        {
+            get { return this.programFinished; }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the program is currently running.
+        /// </summary>
+        public bool Running
+        {
+            get { return this.programStarted && !this.programFinished; }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the program has finished running.
+        /// </summary>
+        public bool Finished
+        {
+            get { return this.programFinished; }
+        }
+
+        /// <summary>
         /// Runs a brain fuck program
         /// </summary>
-        /// <param name="program">The program to be run</param>
         /// <param name="input"> The input to the program, in the form of a string.</param>
         /// <param name="timeLimit">The maximum time in milliseconds the program will be allowed to run for.
         /// Set to Zero for no time limit. Defaults to 1000 milliseconds</param>
         /// <returns>The outputs from the program, in the form of a string.</returns>
-        public string Run(string program, string input, int timeLimit = 1000)
+        public string Run(string input, int timeLimit = 1000)
         {
-            char[] result = this.Run(program, input.ToCharArray(), timeLimit);
+            char[] result = this.Run(input.ToCharArray(), timeLimit);
 
             for (int i = 0; i < result.Length; i++)
             {
@@ -86,12 +137,11 @@ namespace BrainFucker
         /// <summary>
         /// Runs a brain fuck program.
         /// </summary>
-        /// <param name="program">The program to be run</param>
         /// <param name="input"> The input to the program, in the form of a char array.</param>
         /// <param name="timeLimit">The maximum time in milliseconds the program will be allowed to run for.
         /// Set to Zero for no time limit. Defaults to 1000 milliseconds</param>
         /// <returns>The outputs from the program, in the form of a char array.</returns>
-        public char[] Run(string program, char[] input, int timeLimit = 1000)
+        public char[] Run(char[] input, int timeLimit = 1000)
         {
             byte[] inputBytes = new byte[input.Length];
             for (int i = 0; i < input.Length; i++)
@@ -99,27 +149,29 @@ namespace BrainFucker
                 inputBytes[i] = Convert.ToByte(input[i]);
             }
 
-            byte[] rawResult = this.Run(program, inputBytes, timeLimit);
-            char[] result = Encoding.ASCII.GetString(rawResult).ToCharArray();
+            byte[] rawResult = this.Run(inputBytes, timeLimit);
 
+            char[] result = Encoding.ASCII.GetString(rawResult).ToCharArray();
             return result;
         }
 
         /// <summary>
         /// Runs a brain fuck program.
         /// </summary>
-        /// <param name="program">The program to be run</param>
         /// <param name="input"> The input to the program, in the form of a byte array.</param>
         /// <param name="timeLimit">The maximum time in milliseconds the program will be allowed to run for.
         /// Set to Zero for no time limit. Defaults to 1000 milliseconds</param>
         /// <returns>The outputs from the program, in the form of a byte array.</returns>
-        public byte[] Run(string program, byte[] input, int timeLimit = 1000)
+        public byte[] Run(byte[] input, int timeLimit = 1000)
         {
             this.Init();
 
-            this.program = program;
+            if (this.program == null)
+            {
+                return null;
+            }
 
-            bool isValid = Validator.Validate(program);
+            bool isValid = Validator.Validate(this.program);
 
             if (isValid && timeLimit > 0)
             {
@@ -127,7 +179,7 @@ namespace BrainFucker
 
                 byte[] output = null;
 
-                Thread thread = new Thread(() => output = this.Interpret(program.ToCharArray(), input));
+                Thread thread = new Thread(() => output = this.Interpret(this.program, input));
                 thread.Start();
 
                 bool completed = thread.Join(timeLimit);
@@ -135,6 +187,7 @@ namespace BrainFucker
                 {
                     return null;
                 }
+
                 this.programFinished = true;
                 return output;
             }
@@ -142,72 +195,11 @@ namespace BrainFucker
             {
                 this.programStarted = true;
 
-                byte[] output = this.Interpret(program.ToCharArray(), input);
+                byte[] output = this.Interpret(this.program, input);
 
                 this.programFinished = true;
 
                 return output;
-            }
-            else
-            {
-                return null;
-            }
-
-        }
-
-        /// <summary>
-        /// Re runs the last program
-        /// </summary>
-        /// <param name="input"> The input to the program. </param>
-        /// <param name="timeLimit">The maximum time in milliseconds the program will be allowed to run for.
-        /// Set to Zero for no time limit. Defaults to 1000 milliseconds</param>
-        /// <returns>The outputs from the program</returns>
-        public string Rerun(string input, int timeLimit = 1000)
-        {
-            if (this.program != null)
-            {
-                this.Init();
-                return this.Run(this.program, input, timeLimit);
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Re runs the last program
-        /// </summary>
-        /// <param name="input"> The input to the program. </param>
-        /// <param name="timeLimit">The maximum time in milliseconds the program will be allowed to run for.
-        /// Set to Zero for no time limit. Defaults to 1000 milliseconds</param>
-        /// <returns>The outputs from the program</returns>
-        public char[] Rerun(char[] input, int timeLimit = 1000)
-        {
-            if (this.program != null)
-            {
-                this.Init();
-                return this.Run(this.program, input, timeLimit);
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Re runs the last program
-        /// </summary>
-        /// <param name="input"> The input to the program. </param>
-        /// <param name="timeLimit">The maximum time in milliseconds the program will be allowed to run for.
-        /// Set to Zero for no time limit. Defaults to 1000 milliseconds</param>
-        /// <returns>The outputs from the program</returns>
-        public byte[] Rerun(byte[] input, int timeLimit = 1000)
-        {
-            if (this.program != null)
-            {
-                this.Init();
-                return this.Run(this.program, input, timeLimit);
             }
             else
             {
@@ -277,6 +269,37 @@ namespace BrainFucker
         }
 
         /// <summary>
+        /// Preforms one step of the program.
+        /// </summary>
+        /// <param name="inputCallBack">A call back function to get the next input value.</param>
+        /// <param name="outputCallback">A call back function to pass out any outputs.</param>
+        public void Step(Func<byte> inputCallBack, Action<byte> outputCallback)
+        {
+            if (this.programPointer <= 0 || this.programFinished)
+            {
+                this.Init();
+                this.programStarted = true;
+            }
+
+            byte input = (this.program[this.programPointer] == Commands.IN) ? inputCallBack() : (byte)0;
+            byte output;
+
+            this.InterpretCommand(this.program, input, out output);
+
+            if (this.program[this.programPointer] == Commands.OUT)
+            {
+                outputCallback(output);
+            }
+
+            this.programPointer++;
+
+            if (this.programPointer == this.program.Length)
+            {
+                this.programFinished = true;
+            }
+        }
+
+        /// <summary>
         /// Interpreter for brain fuck. This function is what actually runs brain fuck. 
         /// </summary>
         /// <param name="commands"> The program to be ran. </param>
@@ -285,94 +308,17 @@ namespace BrainFucker
         private byte[] Interpret(char[] commands, byte[] inputs)
         {
             List<byte> builder = new List<byte>();
-            int loopDepth = 0;
+
             for (this.programPointer = 0; this.programPointer < this.program.Length; this.programPointer++)
             {
-                switch (commands[this.programPointer])
+                byte input = (inputs.Length > 0 && this.inputPointer < inputs.Length) ? inputs[this.inputPointer] : (byte)0;
+
+                byte output = (byte)0;
+                this.InterpretCommand(commands, input, out output);
+
+                if (this.program[this.programPointer] == Commands.OUT)
                 {
-                    case Commands.NEXT:
-
-                        this.dataPointer = (this.dataPointer == Engine.DataSize - 1) ? 0 : this.dataPointer + 1;
-                        break;
-
-                    case Commands.PREV:
-
-                        this.dataPointer = (this.dataPointer == 0) ? Engine.DataSize - 1 : this.dataPointer - 1;
-                        break;
-
-                    case Commands.INC:
-
-                        this.data[this.dataPointer]++;
-                        break;
-
-                    case Commands.DEC:
-
-                        this.data[this.dataPointer]--;
-                        break;
-
-                    case Commands.OUT:
-
-                        builder.Add(this.data[this.dataPointer]);
-                        break;
-
-                    case Commands.IN:
-
-                        this.data[this.dataPointer] = (byte)inputs[this.inputPointer];
-                        this.inputPointer++;
-                        break;
-
-                    case Commands.BL:
-
-                        if (this.data[this.dataPointer] == 0)
-                        {
-                            this.programPointer++;
-
-                            while (loopDepth > 0 || commands[this.programPointer] != Commands.BR)
-                            {
-                                if (this.program[this.programPointer] == Commands.BL)
-                                {
-                                    loopDepth++;
-                                }
-
-                                if (this.program[this.programPointer] == Commands.BR)
-                                {
-                                    loopDepth--;
-                                }
-
-                                this.programPointer++;
-                            }
-                        }
-
-                        break;
-
-                    case Commands.BR:
-
-                        if (this.data[this.dataPointer] != 0)
-                        {
-                            this.programPointer--;
-
-                            while (loopDepth > 0 || commands[this.programPointer] != Commands.BL)
-                            {
-                                if (this.program[this.programPointer] == Commands.BR)
-                                {
-                                    loopDepth++;
-                                }
-
-                                if (this.program[this.programPointer] == Commands.BL)
-                                {
-                                    loopDepth--;
-                                }
-
-                                this.programPointer--;
-                            }
-
-                            this.programPointer--;
-                        }
-
-                        break;
-
-                    default:
-                        throw new Exception("Undefined command");
+                    builder.Add(output);
                 }
             }
 
@@ -380,13 +326,112 @@ namespace BrainFucker
         }
 
         /// <summary>
+        /// Interpreters a single command.
+        /// </summary>
+        /// <param name="commands">The commands in the program.</param>
+        /// <param name="input">The input to the program.</param>
+        /// <param name="output">The output of the program.</param>
+        private void InterpretCommand(char[] commands, byte input, out byte output)
+        {
+            output = (byte)0;
+
+            switch (commands[this.programPointer])
+            {
+                case Commands.NEXT:
+
+                    this.dataPointer = (this.dataPointer == Engine.DataSize - 1) ? 0 : this.dataPointer + 1;
+                    break;
+
+                case Commands.PREV:
+
+                    this.dataPointer = (this.dataPointer == 0) ? Engine.DataSize - 1 : this.dataPointer - 1;
+                    break;
+
+                case Commands.INC:
+
+                    this.data[this.dataPointer]++;
+                    break;
+
+                case Commands.DEC:
+
+                    this.data[this.dataPointer]--;
+                    break;
+
+                case Commands.OUT:
+
+                    output = this.data[this.dataPointer];
+                    break;
+
+                case Commands.IN:
+
+                    this.data[this.dataPointer] = input;
+                    this.inputPointer++;
+                    break;
+
+                case Commands.BL:
+
+                    if (this.data[this.dataPointer] == 0)
+                    {
+                        this.programPointer++;
+
+                        while (this.loopDepth > 0 || commands[this.programPointer] != Commands.BR)
+                        {
+                            if (this.program[this.programPointer] == Commands.BL)
+                            {
+                                this.loopDepth++;
+                            }
+
+                            if (this.program[this.programPointer] == Commands.BR)
+                            {
+                                this.loopDepth--;
+                            }
+
+                            this.programPointer++;
+                        }
+                    }
+
+                    break;
+
+                case Commands.BR:
+
+                    if (this.data[this.dataPointer] != 0)
+                    {
+                        this.programPointer--;
+
+                        while (this.loopDepth > 0 || commands[this.programPointer] != Commands.BL)
+                        {
+                            if (this.program[this.programPointer] == Commands.BR)
+                            {
+                                this.loopDepth++;
+                            }
+
+                            if (this.program[this.programPointer] == Commands.BL)
+                            {
+                                this.loopDepth--;
+                            }
+
+                            this.programPointer--;
+                        }
+
+                        this.programPointer--;
+                    }
+
+                    break;
+
+                default:
+                    throw new Exception("Undefined command");
+            }
+        } 
+
+        /// <summary>
         /// Initializes the memory and pointers
         /// </summary>
         private void Init()
         {
-            // reset program running info
-            this.programStarted = false;
-            this.programFinished = false;
+            if (this.programFinished == false && this.programStarted == false)
+            {
+                return;
+            }
 
             // zero out memory
             for (int i = 0; i < Engine.DataSize; i++)
@@ -398,6 +443,12 @@ namespace BrainFucker
             this.dataPointer = 0;
             this.programPointer = 0;
             this.inputPointer = 0;
+
+            this.loopDepth = 0;
+
+            // reset program running info
+            this.programStarted = false;
+            this.programFinished = false;
         }
     }
 }
