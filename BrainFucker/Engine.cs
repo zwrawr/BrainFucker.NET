@@ -88,6 +88,22 @@ namespace BrainFucker
             }
         }
 
+        public bool Started
+        {
+            get { return this.programFinished; }
+        }
+
+        public bool Running
+        {
+            get { return this.programStarted && !this.programFinished; }
+        }
+
+        public bool Finished
+        {
+            get { return this.programFinished; }
+        }
+
+
         /// <summary>
         /// Runs a brain fuck program
         /// </summary>
@@ -241,9 +257,14 @@ namespace BrainFucker
             }
         }
 
-        public byte Step(Func<byte> inputCallBack)
+        /// <summary>
+        /// Preforms one step of the program.
+        /// </summary>
+        /// <param name="inputCallBack">A call back function to get the next input value.</param>
+        /// <param name="outputCallback">A call back function to pass out any outputs.</param>
+        public void Step(Func<byte> inputCallBack, Action<byte> outputCallback)
         {
-            if (programPointer <=0)
+            if (programPointer <=0 || this.programFinished)
             {
                 this.Init();
                 this.programStarted = true;
@@ -254,6 +275,8 @@ namespace BrainFucker
 
             InterpretCommand(this.program, input, out output);
 
+            if (this.program[this.programPointer] == Commands.OUT) { outputCallback(output); }
+
             programPointer++;
 
             if (programPointer == this.program.Length)
@@ -261,7 +284,6 @@ namespace BrainFucker
                 this.programFinished = true;
             }
 
-            return 0;
         }
 
         /// <summary>

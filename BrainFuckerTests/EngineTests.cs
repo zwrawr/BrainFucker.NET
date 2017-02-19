@@ -6,8 +6,10 @@
 namespace BrainFucker.Tests
 {
     using System.IO;
+    using System.Collections.Generic;
     using System.Text;
     using NUnit.Framework;
+    using System;
 
     /// <summary>
     /// This class is responsible for unit testing <see cref="Engine"/>.
@@ -172,6 +174,27 @@ namespace BrainFucker.Tests
             info = string.Compare(expected_2, output) == 0;
 
             Assert.IsTrue(info, string.Format("expected {0} =/= input {1}", expected_1, output));
+        }
+
+        [TestCase(",.", "1", "1")]
+        [TestCase(",>,>,.<.<.", "123", "321")]
+        [TestCase(",>+++++++++[<----->-]<--->,>+++++++++[<----->-]<---<[->+<]>>+++++++++[<+++++>-]<+++.", "12", "3")]
+        [Timeout(10000)]
+        public void Test_Stepping( string program, string input, string expected )
+        {
+            Engine bfe = new Engine();
+            bfe.Program = program.ToCharArray();
+
+            StringBuilder output = new StringBuilder();
+            Queue<char> inputQueue = new Queue<char>(input.ToCharArray());
+
+            while (!bfe.Finished)
+            {
+                bfe.Step(() => { return Convert.ToByte(inputQueue.Dequeue()); }, (byte c) => { output.Append(Convert.ToChar(c).ToString()); });
+            }
+
+            Assert.IsTrue(output.ToString() == expected);
+
         }
 
         /// <summary>
