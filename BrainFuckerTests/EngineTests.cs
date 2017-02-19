@@ -5,11 +5,11 @@
 
 namespace BrainFucker.Tests
 {
-    using System.IO;
+    using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Text;
     using NUnit.Framework;
-    using System;
 
     /// <summary>
     /// This class is responsible for unit testing <see cref="Engine"/>.
@@ -93,7 +93,7 @@ namespace BrainFucker.Tests
             Engine bfe = new Engine();
             bfe.Program = program.ToCharArray();
 
-            char[] output = bfe.Run( input);
+            char[] output = bfe.Run(input);
 
             bool allMatch = true;
             for (int i = 0; i < output.Length; i++)
@@ -147,7 +147,7 @@ namespace BrainFucker.Tests
         }
 
         /// <summary>
-        /// Tests the rerun method of <see cref="Engine"/>.
+        /// Tests <see cref="Engine.Run(string, int)"/> multiple times with the same program.
         /// </summary>
         /// <param name="program">The program to be ran.</param>
         /// <param name="input_1">The first input.</param>
@@ -163,7 +163,7 @@ namespace BrainFucker.Tests
             Engine bfe = new Engine();
             bfe.Program = program.ToCharArray();
 
-            string output = bfe.Run( input_1);
+            string output = bfe.Run(input_1);
 
             bool info = string.Compare(expected_1, output) == 0;
 
@@ -176,11 +176,17 @@ namespace BrainFucker.Tests
             Assert.IsTrue(info, string.Format("expected {0} =/= input {1}", expected_1, output));
         }
 
+        /// <summary>
+        /// Tests <see cref="Engine.Step(Func{byte}, Action{byte})"/>
+        /// </summary>
+        /// <param name="program">The program to be ran.</param>
+        /// <param name="input">The input to the program.</param>
+        /// <param name="expected">The expected output.</param>
         [TestCase(",.", "1", "1")]
         [TestCase(",>,>,.<.<.", "123", "321")]
         [TestCase(",>+++++++++[<----->-]<--->,>+++++++++[<----->-]<---<[->+<]>>+++++++++[<+++++>-]<+++.", "12", "3")]
         [Timeout(10000)]
-        public void Test_Stepping( string program, string input, string expected )
+        public void Test_Stepping(string program, string input, string expected)
         {
             Engine bfe = new Engine();
             bfe.Program = program.ToCharArray();
@@ -194,7 +200,6 @@ namespace BrainFucker.Tests
             }
 
             Assert.IsTrue(output.ToString() == expected);
-
         }
 
         /// <summary>

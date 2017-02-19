@@ -59,6 +59,9 @@ namespace BrainFucker
         /// </summary>
         private bool programFinished = false;
 
+        /// <summary>
+        /// How many loops are we in at the current location of the programPointer.
+        /// </summary>
         private int loopDepth = 0;
 
         /// <summary>
@@ -88,21 +91,29 @@ namespace BrainFucker
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether the program has stared running.
+        /// </summary>
         public bool Started
         {
             get { return this.programFinished; }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether the program is currently running.
+        /// </summary>
         public bool Running
         {
             get { return this.programStarted && !this.programFinished; }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether the program has finished running.
+        /// </summary>
         public bool Finished
         {
             get { return this.programFinished; }
         }
-
 
         /// <summary>
         /// Runs a brain fuck program
@@ -264,7 +275,7 @@ namespace BrainFucker
         /// <param name="outputCallback">A call back function to pass out any outputs.</param>
         public void Step(Func<byte> inputCallBack, Action<byte> outputCallback)
         {
-            if (programPointer <=0 || this.programFinished)
+            if (this.programPointer <= 0 || this.programFinished)
             {
                 this.Init();
                 this.programStarted = true;
@@ -273,17 +284,19 @@ namespace BrainFucker
             byte input = (this.program[this.programPointer] == Commands.IN) ? inputCallBack() : (byte)0;
             byte output;
 
-            InterpretCommand(this.program, input, out output);
+            this.InterpretCommand(this.program, input, out output);
 
-            if (this.program[this.programPointer] == Commands.OUT) { outputCallback(output); }
+            if (this.program[this.programPointer] == Commands.OUT)
+            {
+                outputCallback(output);
+            }
 
-            programPointer++;
+            this.programPointer++;
 
-            if (programPointer == this.program.Length)
+            if (this.programPointer == this.program.Length)
             {
                 this.programFinished = true;
             }
-
         }
 
         /// <summary>
@@ -295,7 +308,7 @@ namespace BrainFucker
         private byte[] Interpret(char[] commands, byte[] inputs)
         {
             List<byte> builder = new List<byte>();
-            int loopDepth = 0;
+
             for (this.programPointer = 0; this.programPointer < this.program.Length; this.programPointer++)
             {
                 byte input = (inputs.Length > 0 && this.inputPointer < inputs.Length) ? inputs[this.inputPointer] : (byte)0;
@@ -303,7 +316,7 @@ namespace BrainFucker
                 byte output = (byte)0;
                 this.InterpretCommand(commands, input, out output);
 
-                if (this.program[programPointer] == Commands.OUT)
+                if (this.program[this.programPointer] == Commands.OUT)
                 {
                     builder.Add(output);
                 }
@@ -316,10 +329,8 @@ namespace BrainFucker
         /// Interpreters a single command.
         /// </summary>
         /// <param name="commands">The commands in the program.</param>
-        /// <param name="inputs">The inputs to the program.</param>
-        /// <param name="outputs">The outputs to the program.</param>
-        /// <param name="loopDepth">The current loop depth.</param>
-        /// <returns>The new loop depth.</returns>
+        /// <param name="input">The input to the program.</param>
+        /// <param name="output">The output of the program.</param>
         private void InterpretCommand(char[] commands, byte input, out byte output)
         {
             output = (byte)0;
@@ -417,7 +428,7 @@ namespace BrainFucker
         /// </summary>
         private void Init()
         {
-            if (this.programFinished == false && programStarted == false)
+            if (this.programFinished == false && this.programStarted == false)
             {
                 return;
             }
