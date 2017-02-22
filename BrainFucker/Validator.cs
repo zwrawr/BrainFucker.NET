@@ -10,7 +10,6 @@ namespace BrainFucker
     /// </summary>
     public static class Validator
     {
-
         /// <summary>
         /// Represents the different validation modes.
         /// </summary>
@@ -32,16 +31,17 @@ namespace BrainFucker
         /// <summary>
         /// Validates a brain fuck program.
         /// </summary>
-        /// <param name="program">The program to validate</param>
+        /// <param name="commands">The program to validate</param>
+        /// <param name="validatorMode">Which validation mode to use. Defaults to strict.</param>
         /// <returns>Returns true if program is valid, if not false</returns>
-        public static bool Validate(char[] commands, Mode vMode = Mode.STRICT)
+        public static bool Validate(char[] commands, Mode validatorMode = Mode.STRICT)
         {
             if (commands.Length == 0)
             {
                 return false;
             }
 
-            bool isValid = CheckForInvalidCommands(commands, vMode);
+            bool isValid = CheckForInvalidCommands(commands, validatorMode);
             if (isValid == false)
             {
                 return false;
@@ -60,11 +60,12 @@ namespace BrainFucker
         /// Validates a brain fuck program.
         /// </summary>
         /// <param name="program">The program to validate</param>
+        /// <param name="validatorMode">Which validation mode to use. Defaults to strict.</param>
         /// <returns>Returns true if program is valid, if not false</returns>
-        public static bool Validate(string program, Mode vMode = Mode.STRICT)
+        public static bool Validate(string program, Mode validatorMode = Mode.STRICT)
         {
             char[] commands = program.ToCharArray();
-            return Validate(commands, vMode);
+            return Validate(commands, validatorMode);
         }
 
         /// <summary>
@@ -100,10 +101,15 @@ namespace BrainFucker
         /// Checks to see if the program has any non command chars.
         /// </summary>
         /// <param name="commands">The brain fuck program to validate.</param>
+        /// <param name="validatorMode">Which validation mode to use. Defaults to strict.</param>
         /// <returns>Returns true if program is valid, if not false</returns>
-        public static bool CheckForInvalidCommands(char[] commands, Mode vMode = Mode.STRICT)
+        public static bool CheckForInvalidCommands(char[] commands, Mode validatorMode = Mode.STRICT)
         {
-            if (vMode == Mode.ALL) { return true; }
+            if (validatorMode == Mode.ALL)
+            {
+                return true;
+            }
+
             bool isValid = true;
 
             for (int i = 0; i < commands.Length; i++)
@@ -116,24 +122,34 @@ namespace BrainFucker
                 {
                     isValid = true;
                 }
-                else if (vMode == Mode.WHITESPACE)
+                else if (validatorMode == Mode.WHITESPACE)
                 {
                     if (!(c == ' ' || c == '\n' || c == '\t' || c == '\r'))
                     {
                         return false;
                     }
                 }
-                else if (vMode == Mode.COMMENTS || vMode == Mode.ALL)
+                else if (validatorMode == Mode.COMMENTS || validatorMode == Mode.ALL)
                 {
                     if (!(c == ' ' || c == '\n' || c == '\t' || c == '\r'))
                     {
-                        if ( commands[i] == '/' && commands[i + 1] == '/') // in line comment start.
+                        if (commands[i] == '/' && commands[i + 1] == '/') 
                         {
-                            do { i++; } while (commands[i] != '\n' && commands[i] != '\r');
+                            // in line comment start.
+                            do
+                            {
+                                i++;
+                            }
+                            while (commands[i] != '\n' && commands[i] != '\r');
                         }
-                        else if ( commands[i] == '/' && commands[i + 1] == '*') // multi line comment start.
+                        else if (commands[i] == '/' && commands[i + 1] == '*')
                         {
-                            do { i++; } while (!(commands[i] == '*' && commands[i + 1] == '/'));
+                            // multi line comment start.
+                            do
+                            {
+                                i++;
+                            }
+                            while (!(commands[i] == '*' && commands[i + 1] == '/'));
                             i++;
                         }
                         else

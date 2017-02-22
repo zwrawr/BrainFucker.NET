@@ -70,7 +70,13 @@ namespace BrainFucker.Tests
             Assert.IsTrue(isValid == Validator.CheckForInvalidCommands(program.ToCharArray()));
         }
 
-        [TestCase("++++",Validator.Mode.STRICT, true)]
+        /// <summary>
+        /// Test the CheckForInvalidCommands with a variety of validation modes/
+        /// </summary>
+        /// <param name="program">the program to check.</param>
+        /// <param name="mode">The validation mode.</param>
+        /// <param name="isValid">Whether the test program is valid in the current mode.</param>
+        [TestCase("++++", Validator.Mode.STRICT, true)]
         [TestCase("+++ +", Validator.Mode.STRICT, false)]
         [TestCase("+++a+", Validator.Mode.STRICT, false)]
         [TestCase("++++", Validator.Mode.WHITESPACE, true)]
@@ -83,7 +89,7 @@ namespace BrainFucker.Tests
         [TestCase("+a+//abcde\n++/*words*/+", Validator.Mode.ALL, true)]
         public void InvalidCommands_ValidationModes_Test(string program, Validator.Mode mode, bool isValid)
         {
-            Assert.IsTrue(isValid == Validator.CheckForInvalidCommands(program.ToCharArray(),mode));
+            Assert.IsTrue(isValid == Validator.CheckForInvalidCommands(program.ToCharArray(), mode));
         }
     }
 }
