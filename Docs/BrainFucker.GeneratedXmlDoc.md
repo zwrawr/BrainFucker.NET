@@ -49,6 +49,27 @@
 
 
 ---
+#### Field Engine.programStarted
+
+ Whether the program has started execution. 
+
+
+
+---
+#### Field Engine.programFinished
+
+ Whether the program has finished execution. 
+
+
+
+---
+#### Field Engine.loopDepth
+
+ How many loops are we in at the current location of the programPointer. 
+
+
+
+---
 #### Method Engine.#ctor
 
  Initializes a new instance of the [[|T:BrainFucker.Engine]] class. 
@@ -56,13 +77,40 @@
 
 
 ---
-#### Method Engine.Run(System.String,System.String,System.Int32)
+#### Property Engine.Program
+
+ Gets or sets the program that this engine will run. 
+
+
+
+---
+#### Property Engine.Started
+
+ Gets a value indicating whether the program has stared running. 
+
+
+
+---
+#### Property Engine.Running
+
+ Gets a value indicating whether the program is currently running. 
+
+
+
+---
+#### Property Engine.Finished
+
+ Gets a value indicating whether the program has finished running. 
+
+
+
+---
+#### Method Engine.Run(System.String,System.Int32)
 
  Runs a brain fuck program 
 
 |Name | Description |
 |-----|------|
-|program: |The program to be run|
 |input: | The input to the program, in the form of a string.|
 |timeLimit: |The maximum time in milliseconds the program will be allowed to run for. Set to Zero for no time limit. Defaults to 1000 milliseconds|
 **Returns**: The outputs from the program, in the form of a string.
@@ -70,13 +118,12 @@
 
 
 ---
-#### Method Engine.Run(System.String,System.Char[],System.Int32)
+#### Method Engine.Run(System.Char[],System.Int32)
 
  Runs a brain fuck program. 
 
 |Name | Description |
 |-----|------|
-|program: |The program to be run|
 |input: | The input to the program, in the form of a char array.|
 |timeLimit: |The maximum time in milliseconds the program will be allowed to run for. Set to Zero for no time limit. Defaults to 1000 milliseconds|
 **Returns**: The outputs from the program, in the form of a char array.
@@ -84,13 +131,12 @@
 
 
 ---
-#### Method Engine.Run(System.String,System.Byte[],System.Int32)
+#### Method Engine.Run(System.Byte[],System.Int32)
 
  Runs a brain fuck program. 
 
 |Name | Description |
 |-----|------|
-|program: |The program to be run|
 |input: | The input to the program, in the form of a byte array.|
 |timeLimit: |The maximum time in milliseconds the program will be allowed to run for. Set to Zero for no time limit. Defaults to 1000 milliseconds|
 **Returns**: The outputs from the program, in the form of a byte array.
@@ -98,41 +144,16 @@
 
 
 ---
-#### Method Engine.Rerun(System.String,System.Int32)
+#### Method Engine.Run(System.Func{System.Byte},System.Action{System.Byte},System.Int32)
 
- Re runs the last program 
-
-|Name | Description |
-|-----|------|
-|input: | The input to the program. |
-|timeLimit: |The maximum time in milliseconds the program will be allowed to run for. Set to Zero for no time limit. Defaults to 1000 milliseconds|
-**Returns**: The outputs from the program
-
-
-
----
-#### Method Engine.Rerun(System.Char[],System.Int32)
-
- Re runs the last program 
+ Runs a brain fuck program. 
 
 |Name | Description |
 |-----|------|
-|input: | The input to the program. |
-|timeLimit: |The maximum time in milliseconds the program will be allowed to run for. Set to Zero for no time limit. Defaults to 1000 milliseconds|
-**Returns**: The outputs from the program
-
-
-
----
-#### Method Engine.Rerun(System.Byte[],System.Int32)
-
- Re runs the last program 
-
-|Name | Description |
-|-----|------|
-|input: | The input to the program. |
-|timeLimit: |The maximum time in milliseconds the program will be allowed to run for. Set to Zero for no time limit. Defaults to 1000 milliseconds|
-**Returns**: The outputs from the program
+|inputCallBack: |A call back function to get the next input value.|
+|outputCallback: |A call back function to pass out any outputs.|
+|timeLimit: | The maximum time to try and execute the brain fuck program. If zero then no time limit. |
+**Returns**: 
 
 
 
@@ -159,6 +180,17 @@
 
 
 ---
+#### Method Engine.Step(System.Func{System.Byte},System.Action{System.Byte})
+
+ Preforms one step of the program. 
+
+|Name | Description |
+|-----|------|
+|inputCallBack: |A call back function to get the next input value.|
+|outputCallback: |A call back function to pass out any outputs.|
+
+
+---
 #### Method Engine.Interpret(System.Char[],System.Byte[])
 
  Interpreter for brain fuck. This function is what actually runs brain fuck. 
@@ -169,6 +201,18 @@
 |inputs: | The inputs to the program. |
 **Returns**: The outputs from the program
 
+
+
+---
+#### Method Engine.InterpretCommand(System.Char[],System.Byte,System.Byte@)
+
+ Interpreters a single command. 
+
+|Name | Description |
+|-----|------|
+|commands: |The commands in the program.|
+|input: |The input to the program.|
+|output: |The output of the program.|
 
 
 ---
@@ -217,6 +261,18 @@
 #### Field Validator.Mode.ALL
 
  Allows all. 
+
+
+
+---
+#### Method Validator.Validate(System.Char[],BrainFucker.Validator.Mode)
+
+ Validates a brain fuck program. 
+
+|Name | Description |
+|-----|------|
+|program: |The program to validate|
+**Returns**: Returns true if program is valid, if not false
 
 
 

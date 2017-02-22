@@ -54,7 +54,9 @@
     <Compile Include="CommandsTests.cs" />
     <Compile Include="EngineTests.cs" />
     <Compile Include="ValidatorTests.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BrainFucker\BrainFucker.csproj">

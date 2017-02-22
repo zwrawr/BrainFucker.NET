@@ -177,6 +177,29 @@ namespace BrainFucker.Tests
         }
 
         /// <summary>
+        /// Tests <see cref="Engine.Run(Func{byte}, Action{byte})"/>
+        /// </summary>
+        /// <param name="program">The program to be ran.</param>
+        /// <param name="input">The input to the program.</param>
+        /// <param name="expected">The expected output.</param>
+        [TestCase(",.", "1", "1")]
+        [TestCase(",>,>,.<.<.", "123", "321")]
+        [TestCase(",>+++++++++[<----->-]<--->,>+++++++++[<----->-]<---<[->+<]>>+++++++++[<+++++>-]<+++.", "12", "3")]
+        [Timeout(10000)]
+        public void Test_Run_FuncIO(string program, string input, string expected)
+        {
+            Engine bfe = new Engine();
+            bfe.Program = program.ToCharArray();
+
+            StringBuilder output = new StringBuilder();
+            Queue<char> inputQueue = new Queue<char>(input.ToCharArray());
+
+            bfe.Run(() => { return Convert.ToByte(inputQueue.Dequeue()); }, (byte c) => { output.Append(Convert.ToChar(c).ToString()); });
+
+            Assert.AreEqual(expected, output.ToString(), "Actual output was not the same as expected output!");
+        }
+
+        /// <summary>
         /// Tests <see cref="Engine.Step(Func{byte}, Action{byte})"/>
         /// </summary>
         /// <param name="program">The program to be ran.</param>
@@ -199,7 +222,7 @@ namespace BrainFucker.Tests
                 bfe.Step(() => { return Convert.ToByte(inputQueue.Dequeue()); }, (byte c) => { output.Append(Convert.ToChar(c).ToString()); });
             }
 
-            Assert.IsTrue(output.ToString() == expected);
+            Assert.AreEqual(expected, output.ToString());
         }
 
         /// <summary>
