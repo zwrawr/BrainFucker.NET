@@ -85,5 +85,17 @@ namespace BrainFucker.Tests
         {
             Assert.IsTrue(isValid == Validator.CheckForInvalidCommands(program.ToCharArray(),mode));
         }
+
+        [TestCase("/* Multi Line Comment */", true)]
+        [TestCase("/* Multi Line Comment * /", false)]
+        [TestCase("/* Multi Line Comment *", false)]
+        [TestCase("/* Multi Line Comment ", false)]
+        [TestCase("/* Multi Line Comment /", false)]
+        [TestCase("// Multi Line Comment \n", true)]
+        [TestCase("// Multi Line Comment ", false)]
+        public void UnclosedComments_Test(string program, bool isValid)
+        {
+            Assert.IsTrue(isValid == Validator.CheckForInvalidCommands(program.ToCharArray(), Validator.Mode.COMMENTS));
+        }
     }
 }
