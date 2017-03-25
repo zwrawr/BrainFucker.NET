@@ -208,6 +208,75 @@ namespace BrainFucker
         }
 
         /// <summary>
+        /// Runs a brain fuck program.
+        /// </summary>
+        /// <param name="inputCallBack">A call back function to get the next input value.</param>
+        /// <param name="outputCallback">A call back function to pass out any outputs.</param>
+        /// <param name="timeLimit">
+        /// The maximum time to try and execute the brain fuck program. If zero then no time limit.
+        /// </param>
+        /// <returns>A boolean indicating whether or not the execution completed.</returns>
+        public bool Run(Func<byte> inputCallBack, Action<byte> outputCallback, int timeLimit = 1000)
+        {
+            this.Init();
+
+            if (this.program == null)
+            {
+                return false;
+            }
+
+            bool isValid = Validator.Validate(this.program);
+
+            if (isValid)
+            {
+                this.programStarted = true;
+
+                Thread thread = new Thread(
+                    () =>
+                        {
+                            for (this.programPointer = 0; this.programPointer < this.program.Length; this.programPointer++)
+                            {
+                                byte input = (this.program[this.programPointer] == Commands.IN) ? inputCallBack() : (byte)0;
+                                byte output = (byte)0;
+
+                                this.InterpretCommand(this.program, input, out output);
+
+                                if (this.program[this.programPointer] == Commands.OUT)
+                                {
+                                    outputCallback(output);
+                                }
+                            }
+                        });
+
+                thread.Start();
+
+                if (timeLimit != 0)
+                {
+                    bool completed = thread.Join(timeLimit);
+                    if (!completed)
+                    {
+                        this.programFinished = true;
+                        return false; // did finish in time limit
+                    }
+                    else
+                    {
+                        return false; // didn't finish executing in time limit
+                    }
+                }
+                else
+                {
+                    thread.Join();
+                    this.programFinished = true;
+                    return true; // did finish
+                }
+            }
+            else
+            {
+                return false; // didn't finish running, didn't start.
+            }
+        }
+
+        /// <summary>
         /// Gets a dump of the memory.
         /// </summary>
         /// <returns>Returns the contents of memory. Contains 30,000 bytes.</returns>

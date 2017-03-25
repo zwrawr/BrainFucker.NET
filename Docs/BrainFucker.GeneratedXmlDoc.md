@@ -48,12 +48,6 @@
 
 
 
----
-#### Field Engine.programStarted
-
- Whether the program has started execution. 
-
-
 
 ---
 #### Field Engine.programFinished
@@ -71,8 +65,7 @@
 
 ---
 #### Method Engine.#ctor
-
- Initializes a new instance of the [[|T:BrainFucker.Engine]] class. 
+ Whether the program has started execution. 
 
 
 
@@ -85,23 +78,17 @@
 
 ---
 #### Property Engine.Started
-
  Gets a value indicating whether the program has stared running. 
-
 
 
 ---
 #### Property Engine.Running
-
  Gets a value indicating whether the program is currently running. 
-
 
 
 ---
 #### Property Engine.Finished
-
  Gets a value indicating whether the program has finished running. 
-
 
 
 ---
@@ -132,6 +119,14 @@
 
 ---
 #### Method Engine.Run(System.Byte[],System.Int32)
+ Runs a brain fuck program. 
+
+|Name | Description |
+|-----|------|
+|input: | The input to the program, in the form of a char array.|
+|timeLimit: |The maximum time in milliseconds the program will be allowed to run for. Set to Zero for no time limit. Defaults to 1000 milliseconds|
+**Returns**: The outputs from the program, in the form of a char array.
+
 
  Runs a brain fuck program. 
 
