@@ -373,6 +373,34 @@ namespace BrainFucker.Tests
             }
         }
 
+        /// <summary>
+        /// Test memory access.
+        /// </summary>
+        [Test]
+        public void Test_MemoryAccess()
+        {
+
+            string test = "+[>-]";
+            Engine bfe = new Engine();
+            bfe.Program = test.ToCharArray();
+
+            string output = bfe.Run(test);
+
+            byte[] dump = bfe.DumpMemory();
+
+            for (int i = 0; i < 30000; i++)
+            {
+                if (i == 0)
+                {
+                    Assert.IsTrue(dump[i] ==  (byte)0 );
+                }
+                else
+                {
+                    Assert.IsTrue(dump[i] == (byte)255 );
+                }
+            }
+        }
+
         /*
                 // These tests are timing dependent so don't run them on travisCI.
 

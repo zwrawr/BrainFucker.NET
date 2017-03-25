@@ -133,23 +133,26 @@ namespace BrainFucker
                 {
                     if (!(c == ' ' || c == '\n' || c == '\t' || c == '\r'))
                     {
-                        if (commands[i] == '/' && commands[i + 1] == '/') 
+                        if (commands[i] == '/' && commands[i + 1] == '/') // in line comment start.
                         {
-                            // in line comment start.
-                            do
+                            do { i++; } while ((i < commands.Length-1) && commands[i] != '\n');
+
+                            // make sure we didn't hit the end of the input before finding the matching comment delimiter.
+                            if ((i == commands.Length - 1) && commands[i] != '\n')
                             {
-                                i++;
+                                return false;
                             }
-                            while (commands[i] != '\n' && commands[i] != '\r');
                         }
-                        else if (commands[i] == '/' && commands[i + 1] == '*')
+                        else if (commands[i] == '/' && commands[i + 1] == '*') // multi line comment start.
                         {
-                            // multi line comment start.
-                            do
+                            do { i++; } while ((i < commands.Length - 2) && !(commands[i] == '*' && commands[i + 1] == '/'));
+
+                            // make sure we didn't hit the end of the input before finding the matching comment delimiter.
+                            if ((i == commands.Length - 2) && !(commands[i] == '*' && commands[i + 1] == '/'))
                             {
-                                i++;
+                                return false;
                             }
-                            while (!(commands[i] == '*' && commands[i + 1] == '/'));
+
                             i++;
                         }
                         else
