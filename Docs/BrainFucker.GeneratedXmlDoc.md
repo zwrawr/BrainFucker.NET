@@ -48,6 +48,12 @@
 
 
 
+---
+#### Field Engine.programStarted
+
+ Whether the program has started execution. 
+
+
 
 ---
 #### Field Engine.programFinished
@@ -65,7 +71,8 @@
 
 ---
 #### Method Engine.#ctor
- Whether the program has started execution. 
+
+ Initializes a new instance of the [[|T:BrainFucker.Engine]] class. 
 
 
 
@@ -78,17 +85,23 @@
 
 ---
 #### Property Engine.Started
+
  Gets a value indicating whether the program has stared running. 
+
 
 
 ---
 #### Property Engine.Running
+
  Gets a value indicating whether the program is currently running. 
+
 
 
 ---
 #### Property Engine.Finished
+
  Gets a value indicating whether the program has finished running. 
+
 
 
 ---
@@ -119,14 +132,6 @@
 
 ---
 #### Method Engine.Run(System.Byte[],System.Int32)
- Runs a brain fuck program. 
-
-|Name | Description |
-|-----|------|
-|input: | The input to the program, in the form of a char array.|
-|timeLimit: |The maximum time in milliseconds the program will be allowed to run for. Set to Zero for no time limit. Defaults to 1000 milliseconds|
-**Returns**: The outputs from the program, in the form of a char array.
-
 
  Runs a brain fuck program. 
 
@@ -135,6 +140,20 @@
 |input: | The input to the program, in the form of a byte array.|
 |timeLimit: |The maximum time in milliseconds the program will be allowed to run for. Set to Zero for no time limit. Defaults to 1000 milliseconds|
 **Returns**: The outputs from the program, in the form of a byte array.
+
+
+
+---
+#### Method Engine.Run(System.Func{System.Byte},System.Action{System.Byte},System.Int32)
+
+ Runs a brain fuck program. 
+
+|Name | Description |
+|-----|------|
+|inputCallBack: |A call back function to get the next input value.|
+|outputCallback: |A call back function to pass out any outputs.|
+|timeLimit: | The maximum time to try and execute the brain fuck program. If zero then no time limit. |
+**Returns**: A boolean indicating whether or not the execution completed.
 
 
 
@@ -252,7 +271,8 @@
 
 |Name | Description |
 |-----|------|
-|program: |The program to validate|
+|commands: |The program to validate|
+|validatorMode: |Which validation mode to use. Defaults to strict.|
 **Returns**: Returns true if program is valid, if not false
 
 
@@ -265,6 +285,7 @@
 |Name | Description |
 |-----|------|
 |program: |The program to validate|
+|validatorMode: |Which validation mode to use. Defaults to strict.|
 **Returns**: Returns true if program is valid, if not false
 
 
@@ -289,6 +310,7 @@
 |Name | Description |
 |-----|------|
 |commands: |The brain fuck program to validate.|
+|validatorMode: |Which validation mode to use. Defaults to strict.|
 **Returns**: Returns true if program is valid, if not false
 
 
