@@ -7,7 +7,7 @@ A .NET BrainFuck Interpreter.
 
 [//]: # (#Usage)
 
-#Contributing
+# Contributing
 
 ## Found some thing broken ?
 head over [here](https://github.com/zwrawr/BrainFucker.NET/issues) and create a new issue.
@@ -21,6 +21,6 @@ head over [here](https://github.com/zwrawr/BrainFucker.NET/issues) and create a 
 
 [//]: # (History)
 
-#License
+# License
 
 BrainFucker.NET is under the GNU LGPL. Read the [Licence file](https://github.com/zwrawr/BrainFucker.NET/blob/master/LICENCE) for more details.
